@@ -18,5 +18,9 @@ export default {
   },
 
   data: () => ({}),
+
+  created() {
+    this.$store.dispatch("tasks/setTasks")
+  },
 }
 </script>
