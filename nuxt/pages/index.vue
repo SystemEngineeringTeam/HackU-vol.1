@@ -1,6 +1,6 @@
 <template>
   <v-row class="text-center">
-    <v-col cols="12" v-for="(task,i) in tasks" :key="i">
+    <v-col cols="12" v-for="(task,i) in $store.state.tasks.tasks" :key="i">
       <div class="text-center">
         <Task :task="task" />
       </div>
@@ -12,37 +12,11 @@
 import Task from "../components/Task";
 
 export default {
+
   components: {
     Task
   },
 
-  data: () => ({
-    tasks: [
-      {
-        id: 0,
-        name: "ごはん　たべる",
-        deadlineDate: "2020-08-21",
-        deadlineTime: "12:00:00",
-        description: "ふくだくんを焼いて食べる",
-        weight: "0",
-      },
-      {
-        id: 1,
-        name: "うああああ",
-        deadlineDate: "2020-8-22",
-        deadlineTime: "09:12:00",
-        description: "じょぼじょぼのじょぼじょぼりん",
-        weight: "1"
-      },
-      {
-        id: 2,
-        name: "ウホウホミッドナイト",
-        deadlineDate: "2020-8-22",
-        deadlineTime: "21:30:00",
-        description: "ウホウホ！！！？！？？！？！？！？！？！？ウホウホウホウホウホウホウホ！！！！ウホホホホホホホホホｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗウッキーーーーーーーーー！！！！！！！！！！！！！！！！！ｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗ",
-        weight: "2"
-      }
-    ]
-  }),
+  data: () => ({}),
 }
 </script>
