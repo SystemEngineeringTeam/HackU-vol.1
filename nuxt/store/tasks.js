@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export const state = () => ({
     tasks: [
         {
@@ -44,4 +46,12 @@ export const mutations = {
     removeTask(state, index) {
       state.tasks.splice(index, 1);
     }
+}
+
+export const actions = {
+    async setTasks(){
+        await axios.get("localhost:8080/tasks").then((res) => {
+            context.commit("setTasks", res.data);
+        })
+    },
 }
