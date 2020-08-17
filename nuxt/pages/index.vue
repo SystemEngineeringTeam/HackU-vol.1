@@ -23,7 +23,7 @@ export default {
         name: "ごはん　たべる",
         deadlineDate: "2020-08-21",
         deadlineTime: "12:00:00",
-        description: "0",
+        description: "ふくだくんを焼いて食べる",
         weight: "0",
       },
       {
@@ -31,8 +31,16 @@ export default {
         name: "うああああ",
         deadlineDate: "2020-8-22",
         deadlineTime: "09:12:00",
-        description: "0",
+        description: "じょぼじょぼのじょぼじょぼりん",
         weight: "1"
+      },
+      {
+        id: 2,
+        name: "ウホウホミッドナイト",
+        deadlineDate: "2020-8-22",
+        deadlineTime: "21:30:00",
+        description: "ウホウホ！！！？！？？！？！？！？！？！？ウホウホウホウホウホウホウホ！！！！ウホホホホホホホホホｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗウッキーーーーーーーーー！！！！！！！！！！！！！！！！！ｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗ",
+        weight: "2"
       }
     ]
   }),

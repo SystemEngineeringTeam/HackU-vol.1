@@ -6,6 +6,9 @@
     <v-card-subtitle>
       {{cardStr}}
     </v-card-subtitle>
+    <v-card-text>
+      {{task.description}}
+    </v-card-text>
     <v-card-actions class="justify-center">
       <v-btn @click="test">更新</v-btn>
       <v-btn @click="test">削除</v-btn>
