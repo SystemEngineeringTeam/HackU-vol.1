@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export const state = () => ({
     tasks: [
         {
@@ -44,4 +46,15 @@ export const mutations = {
     removeTask(state, index) {
       state.tasks.splice(index, 1);
     }
+}
+
+export const actions = {
+    async setTasks({rootState,commit}){
+        const params = {
+            userToken: rootState.user.token
+        }
+        await axios.get("localhost:8080/tasks",{params}).then((res) => {
+            commit("setTasks", res.data);
+        })
+    },
 }
