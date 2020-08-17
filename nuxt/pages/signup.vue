@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
@@ -49,7 +50,17 @@ export default {
   },
   methods: {
     create_user() {
-      console.log(this.name, this.email, this.pass)
+      const post_json = {
+        name: this.name,
+        email: this.email,
+        pass: this.pass,
+      }
+      console.log(post_json)
+      axios.post('localhost:8080/users/signup', post_json).then((res) => {
+        if (res.status == 200) {
+          console.log('ok!')
+        }
+      })
     },
   },
 }
