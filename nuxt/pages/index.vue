@@ -20,7 +20,8 @@ export default {
   data: () => ({}),
 
   created() {
-    this.$store.dispatch("tasks/setTasks")
+    this.$store.dispatch("tasks/setTasks");
+    //this.$store.dispatch("tasks/postTask");
   },
 }
 </script>
