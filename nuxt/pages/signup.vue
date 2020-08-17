@@ -61,6 +61,7 @@ export default {
           console.log('ok!')
         }
       })
+      this.$router.push('/')
     },
   },
 }
