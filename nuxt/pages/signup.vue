@@ -31,7 +31,7 @@
               class="mr-4"
               @click="create_user"
             >
-              Validate
+              送信
             </v-btn>
           </v-form>
       </v-col>
