@@ -49,7 +49,7 @@ export const mutations = {
 }
 
 export const actions = {
-    async setTasks(){
+    async setTasks(context){
         await axios.get("localhost:8080/tasks").then((res) => {
             context.commit("setTasks", res.data);
         })
