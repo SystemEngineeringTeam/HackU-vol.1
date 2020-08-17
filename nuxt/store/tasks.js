@@ -85,27 +85,10 @@ export const actions = {
     },
 
     async postTask({ rootState, commit , dispatch}) {
-        const post_json = {
-            name: rootState.tasks.post.name,
-            deadlineDate: rootState.tasks.post.deadlineDate,
-            deadlineTime: rootState.tasks.post.deadlineTime,
-            description: rootState.tasks.post.description,
-            weight: rootState.tasks.post.weight
-        }
-
-        await axios.post("localhost:8080/tasks", post_json, { params: { userToken: rootState.user.token } })
+        await axios.post("localhost:8080/tasks", rootState.tasks.post, { params: { userToken: rootState.user.token } })
         .then((res) => {
             if (res.status === 200) {
-                let task = {
-                    id: res.data.id,
-                    name: rootState.tasks.post.name,
-                    deadlineDate: rootState.tasks.post.deadlineDate,
-                    deadlineTime: rootState.tasks.post.deadlineTime,
-                    description: rootState.tasks.post.description,
-                    weight: rootState.tasks.post.weight
-                };
-                
-                commit("addTask", task);
+                commit("addTask", res.data);
                 dispatch("postAllReset");
             }
         })
