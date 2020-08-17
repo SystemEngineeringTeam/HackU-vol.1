@@ -119,14 +119,3 @@ export const actions = {
         context.commit("setPostWeight", "");
     }
 }
-
-export const actions = {
-    async setTasks({rootState,commit}){
-        const params = {
-            userToken: rootState.user.token
-        }
-        await axios.get("localhost:8080/tasks",{params}).then((res) => {
-            commit("setTasks", res.data);
-        })
-    },
-}
