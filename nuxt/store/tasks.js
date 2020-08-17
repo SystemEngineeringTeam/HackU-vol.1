@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export const state = () => ({
     tasks: [
         {
@@ -24,15 +26,23 @@ export const state = () => ({
             description: "ウホウホ！！！？！？？！？！？！？！？！？ウホウホウホウホウホウホウホ！！！！ウホホホホホホホホホｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗウッキーーーーーーーーー！！！！！！！！！！！！！！！！！ｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗ",
             weight: "2"
         }
-    ]
+    ],
+
+    post: {
+        name: "",
+        deadlineDate: "",
+        deadlineTime: "",
+        description: "",
+        weight: ""
+    }
 })
 
 export const mutations = {
-    setTasks(state,tasks){
+    setTasks(state, tasks) {
         state.tasks = tasks;
     },
 
-    addTask(state,task){
+    addTask(state, task) {
         state.tasks.push(task);
     },
 
@@ -42,6 +52,70 @@ export const mutations = {
     },
 
     removeTask(state, index) {
-      state.tasks.splice(index, 1);
+        state.tasks.splice(index, 1);
+    },
+
+    setPostName(state, name) {
+        state.post.name = name;
+    },
+
+    setPostDeadlineDate(state, deadlineDate) {
+        state.post.deadlineDate = deadlineDate;
+    },
+
+    setPostDeadlineTime(state, deadlineTime) {
+        state.post.deadlineTime = deadlineTime;
+    },
+
+    setPostDescription(state, description) {
+        state.post.description = description;
+    },
+
+    setPostWeight(state, weight) {
+        state.post.weight = weight;
+    }
+}
+
+export const actions = {
+    async setTasks({ rootState, commit }) {
+        await axios.get("localhost:8080/tasks", { params: { userToken: rootState.user.token } })
+            .then((res) => {
+                commit("setTasks", res.data);
+            })
+    },
+
+    async postTask({ rootState, commit , dispatch}) {
+        const post_json = {
+            name: rootState.tasks.post.name,
+            deadlineDate: rootState.tasks.post.deadlineDate,
+            deadlineTime: rootState.tasks.post.deadlineTime,
+            description: rootState.tasks.post.description,
+            weight: rootState.tasks.post.weight
+        }
+
+        await axios.post("localhost:8080/tasks", post_json, { params: { userToken: rootState.user.token } })
+        .then((res) => {
+            if (res.status === 200) {
+                let task = {
+                    id: res.data.id,
+                    name: rootState.tasks.post.name,
+                    deadlineDate: rootState.tasks.post.deadlineDate,
+                    deadlineTime: rootState.tasks.post.deadlineTime,
+                    description: rootState.tasks.post.description,
+                    weight: rootState.tasks.post.weight
+                };
+                
+                commit("addTask", task);
+                dispatch("postAllReset");
+            }
+        })
+    },
+
+    postAllReset(context) {
+        context.commit("setPostName", "");
+        context.commit("setPostDeadlineDate", "");
+        context.commit("setPostDeadlineTime", "");
+        context.commit("setPostDescription", "");
+        context.commit("setPostWeight", "");
     }
 }
