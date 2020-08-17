@@ -1,0 +1,186 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "HackU-RPGToDo"
+host: "localhost:8080"
+tags:
+  - name: "tasks"
+    description: "タスク関連API"
+  - name: "users"
+    description: "ユーザー関連API"
+schemes:
+  - "http"
+paths:
+
+  /tasks:
+    get:
+      tags:
+        - "tasks"
+      summary: "タスク一覧API"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "userToken"
+          in: "query"
+          description: "ログイン時に取得したtoken"
+          required: true
+          type: "string"
+      responses:
+        200:
+          "description": "A successful response."
+          "schema":
+            "$ref": "#/definitions/TasksGetResponse"
+
+    post:
+      tags:
+        - "tasks"
+      summary: "タスク追加API"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "userToken"
+          in: "query"
+          description: "ログイン時に取得したtoken"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "Request Body"
+          required: true
+          schema:
+            $ref: "#/definitions/TaskCreateRequest"
+      responses:
+        200:
+          "description": "A successful response."
+          "schema":
+            "$ref": "#/definitions/TaskCreateResponse"
+
+  /tasks/success:
+    post:
+      tags:
+        - "tasks"
+      summary: "タスク達成API"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "taskID"
+          in: "query"
+          description: "タスクのID"
+          required: true
+          type: "integer"
+        - name: "userToken"
+          in: "query"
+          description: "ログイン時に取得したtoken"
+          required: true
+          type: "string"
+      responses:
+        200:
+          "description": "A successful response."
+
+  /users/login:
+    post:
+      tags:
+        - "users"
+      summary: "ログインAPI"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Request Body"
+          required: true
+          schema:
+            $ref: "#/definitions/LoginRequest"
+      responses:
+        200:
+          "description": "A successful response."
+          "schema":
+            "$ref": "#/definitions/LoginResponse"
+
+  /users/signup:
+    post:
+      tags:
+        - "users"
+      summary: "ユーザー登録API"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Request Body"
+          required: true
+          schema:
+            $ref: "#/definitions/SignupRequest"
+      responses:
+        200:
+          "description": "A successful response."
+
+definitions:
+  TasksGetResponse:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        deadlineDate:
+          type: "string"
+        deadlineTime:
+          type: "string"
+        description:
+          type: "string"
+        weight:
+          type: "string"
+  TaskCreateRequest:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      deadlineDate:
+        type: "string"
+      deadlineTime:
+        type: "string"
+      description:
+        type: "string"
+      weight:
+        type: "string"
+  TaskCreateResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+  LoginRequest:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      pass:
+        type: "string"
+  LoginResponse:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      token:
+        type: "string"
+  SignupRequest:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      email:
+        type: "string"
+      pass:
+        type: "string"
