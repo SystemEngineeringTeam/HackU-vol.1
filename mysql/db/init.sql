@@ -3,7 +3,7 @@ use production_db;
 create table users(
     id int auto_increment not null primary key,
     name varchar(128) not null,
-    mail varchar(128) not null,
+    email varchar(128) not null,
     password varchar(128) not null,
     token varchar(128) not null
 );
