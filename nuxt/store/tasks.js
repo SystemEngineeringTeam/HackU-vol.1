@@ -84,14 +84,14 @@ export const actions = {
             })
     },
 
-    async postTask({ rootState, commit , dispatch}) {
+    async postTask({ rootState, commit, dispatch }) {
         await axios.post("localhost:8080/tasks", rootState.tasks.post, { params: { userToken: rootState.user.token } })
-        .then((res) => {
-            if (res.status === 200) {
-                commit("addTask", res.data);
-                dispatch("postAllReset");
-            }
-        })
+            .then((res) => {
+                if (res.status === 200) {
+                    commit("addTask", res.data);
+                    dispatch("postAllReset");
+                }
+            })
     },
 
     postAllReset(context) {
@@ -100,5 +100,14 @@ export const actions = {
         context.commit("setPostDeadlineTime", "");
         context.commit("setPostDescription", "");
         context.commit("setPostWeight", "");
+    },
+
+    //taskIDを指定する場合
+    async successTask({rootState}, taskID) {
+        await axios.post("localhost:8080/tasks/success", {}, { params: { taskID: taskID, userToken: rootState.user.token} })
+            .then((res) => {
+                console.log(res.status);
+                //何かすることがあればここに書く
+            })
     }
 }
