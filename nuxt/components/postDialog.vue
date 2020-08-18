@@ -54,7 +54,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="postDialogBool = false"
+          <v-btn color="blue darken-1" text @click="postCancel"
             >Close</v-btn
           >
           <v-btn color="blue darken-1" text @click="postDialogBool = false"
@@ -81,7 +81,12 @@ export default {
     weights: ['ぬるい', 'ふつう', 'えぐい'],
   }),
 
-  methods: {},
+  methods: {
+    postCancel(){
+      this.postDialogBool = false
+      this.$store.dispatch('tasks/postAllReset')
+    }
+  },
 
   computed: {
     title: {

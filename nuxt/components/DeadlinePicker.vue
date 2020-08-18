@@ -12,7 +12,7 @@
         <template v-slot:activator="{ on, attrs }">
           <v-text-field
             v-model="date"
-            label="Picker without buttons"
+            label="tasks deadline date"
             readonly
             v-bind="attrs"
             v-on="on"
@@ -42,7 +42,7 @@
         <template v-slot:activator="{ on, attrs }">
           <v-text-field
             v-model="time"
-            label="Picker in menu"
+            label="tasks deadline time"
             readonly
             v-bind="attrs"
             v-on="on"
