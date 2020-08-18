@@ -1,7 +1,7 @@
 <template>
   <v-app dark>
     <v-app-bar fixed app>
-      <v-toolbar-title v-text="title" />
+      <v-toolbar-title v-text="title" @click="$router.push('/')"/>
       <v-spacer />
       <v-btn class="mr-2" color="primary" to="/signup">
         signup
