@@ -1,7 +1,6 @@
 package apifuncs
 
 import (
-	"fmt"
 	"net/http"
 
 	"set1.ie.aitech.ac.jp/HackU_vol_1/dbctl"
@@ -14,9 +13,11 @@ func DBTest(w http.ResponseWriter, r *http.Request) {
 	// 	log.Fatal(err)
 	// 	return
 	// }
-	id, err := dbctl.RegisterNewTask("56f91b5f3668c470912be72ea6cbb0567cfdc0e6ab2266505f3f4b30bab989c6", dbctl.Task{Title: "fuga", Weight: "えぐい"})
-	if err != nil {
-		return
-	}
-	fmt.Println(id)
+	token := "56f91b5f3668c470912be72ea6cbb0567cfdc0e6ab2266505f3f4b30bab989c6"
+	// id, err := dbctl.RegisterNewTask("56f91b5f3668c470912be72ea6cbb0567cfdc0e6ab2266505f3f4b30bab989c6", dbctl.Task{Title: "fuga", Weight: "えぐい"})
+	// if err != nil {
+	// 	return
+	// }
+	// fmt.Println(id)
+	dbctl.TaskAchieveFlagChangeToFalse(token, 1)
 }

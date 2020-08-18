@@ -1,6 +1,7 @@
 package dbctl
 
 import (
+	"errors"
 	"log"
 	"runtime"
 )
@@ -177,6 +178,80 @@ func callTaskIDFromTaskTitle(title string) (int, error) {
 
 func linkTaskIDAndUserID(taskID, userID int) error {
 	_, err := db.Query("insert into user_and_task_links(task_id,user_id) values(?,?)", taskID, userID)
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return err
+	}
+	return nil
+}
+
+// TaskAchieveFlagChangeToTrue はタスクの完了状況を達成済みにする関数
+func TaskAchieveFlagChangeToTrue(token string, taskID int) error {
+	userID, err := callUserIDFromToken(token)
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return err
+	}
+	tIDs, err := callTaskIDsFromUserID(userID)
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return err
+	}
+
+	isInvalidUserID := true
+	for _, tID := range tIDs {
+		if tID == taskID {
+			isInvalidUserID = false
+		}
+	}
+	if isInvalidUserID {
+		return errors.New("Invalid userID")
+	}
+
+	_, err = db.Query("update tasks set isAchieve=true where id=?", taskID)
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return err
+	}
+	return nil
+}
+
+// TaskAchieveFlagChangeToFalse はタスクの完了状況を達成済みにする関数
+func TaskAchieveFlagChangeToFalse(token string, taskID int) error {
+	userID, err := callUserIDFromToken(token)
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return err
+	}
+	tIDs, err := callTaskIDsFromUserID(userID)
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return err
+	}
+
+	isInvalidUserID := true
+	for _, tID := range tIDs {
+		if tID == taskID {
+			isInvalidUserID = false
+		}
+	}
+	if isInvalidUserID {
+		return errors.New("Invalid userID")
+	}
+
+	_, err = db.Query("update tasks set isAchieve=false where id=?", taskID)
 	if err != nil {
 		pc, file, line, _ := runtime.Caller(0)
 		f := runtime.FuncForPC(pc)
