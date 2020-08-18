@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="justify-center">
-      {{ task.name }}
+      {{ task.title }}
     </v-card-title>
     <v-card-subtitle>
       {{cardStr}}
