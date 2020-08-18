@@ -9,7 +9,7 @@ create table users(
 );
 
 create table weights(
-    id int auto_increment not null primary key,
+    id int not null primary key,
     degree varchar(128) not null
 );
 
@@ -20,10 +20,11 @@ create table tasks(
     deadline_time time,
     description varchar(128),
     weight_id int,
+    isAchieve boolean not null,
     foreign key (weight_id) references weights(id) on delete cascade
 );
 
-create table links(
+create table user_and_task_links(
     user_id int not null,
     task_id int not null,
     foreign key (user_id) references users(id) on delete cascade,
