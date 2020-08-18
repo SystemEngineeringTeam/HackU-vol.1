@@ -60,9 +60,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red darken-2" @click="postCancel">Close</v-btn>
-          <v-btn color="green darken-1" @click="postDialogBool = false"
-            >Save</v-btn
-          >
+          <v-btn color="green darken-1" @click="doPost">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -88,6 +86,10 @@ export default {
     postCancel() {
       this.postDialogBool = false
       this.$store.dispatch('tasks/postAllReset')
+    },
+    doPost() {
+      this.postDialogBool = false
+      this.$store.dispatch('tasks/postTask')
     },
   },
 
