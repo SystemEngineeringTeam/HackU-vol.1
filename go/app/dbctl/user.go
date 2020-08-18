@@ -4,7 +4,6 @@ import "crypto/sha256"
 
 // User はデータベースから取得したユーザーのデータを扱うための構造体
 type User struct {
-	ID    int    `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 	Pass  string `json:"pass"`
@@ -41,4 +40,15 @@ func Login(email, password string) (User, error) {
 	}
 
 	return User{Name: name, Token: token}, nil
+}
+
+// RegisterNewUser はユーザの登録を行う関数です
+func RegisterNewUser(u User) error {
+	hashedPassword := string(sha256.New().Sum([]byte(u.Pass)))
+	token := string(sha256.New().Sum([]byte(u.Email)))
+	_, err := db.Query("insert into users(name,email,password,token) values (?,?,?,?)", u.Name, u.Email, hashedPassword, token)
+	if err != nil {
+		return err
+	}
+	return nil
 }
