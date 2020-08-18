@@ -102,12 +102,13 @@ export const actions = {
         context.commit("setPostWeight", "");
     },
 
-    //taskIDを指定する場合
-    async successTask({rootState}, taskID) {
+    async successTask({state,rootState,commit}, taskID) {
         await axios.post("localhost:8080/tasks/success", {}, { params: { taskID: taskID, userToken: rootState.user.token} })
             .then((res) => {
-                console.log(res.status);
-                //何かすることがあればここに書く
+                if(res.status === 200){
+                    let index = state.tasks.findIndex((element) => element.id === taskID);
+                    commit("removeTask",index);
+                }
             })
     }
 }
