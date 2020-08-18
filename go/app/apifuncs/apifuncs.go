@@ -125,18 +125,29 @@ func UsersSignUp(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
 	w.Header().Set("Access-Control-Allow-Headers","*")
 
-/* 	jsonBytes,err:=ioutil.ReadAll(r.Body)
+	jsonBytes,err:=ioutil.ReadAll(r.Body)
 	if err!=nil{
 		w.WriteHeader(http.StatusServiceUnavailable)
 		log.Println("io error")
 		return
 	}
- */
 
+	//構造体の初期化
+	data:=dbctl.User{}
 
+	if err:=json.Unmarshal(jsonBytes,&data);err!=nil{
+		w.WriteHeader(http.StatusServiceUnavailable)
+		fmt.Println("JSON Unmarshal error:", err)
+		return
+	}
 
-
-
+	//ユーザ登録を行う
+	
+	if err:=dbctl.RegisterNewUser(data);err!=nil{
+		w.WriteHeader(http.StatusServiceUnavailable)
+		log.Println("database error")
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)		
 }
