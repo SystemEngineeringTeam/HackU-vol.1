@@ -12,9 +12,10 @@ import (
 //TaskResponse は/tasksに対する処理をする
 func TaskResponse(w http.ResponseWriter, r *http.Request) {
 
-	//セキリティ設定
+	//セキュリティ設定
 	w.Header().Set("Access-Control-Allow-Origin", "*")                       // Allow any access.
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
+	w.Header().Set("Access-Control-Allow-Headers","*")
 
 	q := r.URL.Query()
 	userToken := q["userToken"][0]
@@ -74,6 +75,7 @@ func UsersLogin(w http.ResponseWriter, r *http.Request) {
 	//セキリティ設定
 	w.Header().Set("Access-Control-Allow-Origin", "*")                       // Allow any access.
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
+	w.Header().Set("Access-Control-Allow-Headers","*")
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -83,6 +85,7 @@ func UsersSignUp(w http.ResponseWriter, r *http.Request) {
 	//セキリティ設定
 	w.Header().Set("Access-Control-Allow-Origin", "*")                       // Allow any access.
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
-
+	w.Header().Set("Access-Control-Allow-Headers","*")
+	
 	w.WriteHeader(http.StatusOK)
 }
