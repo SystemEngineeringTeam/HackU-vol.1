@@ -5,12 +5,17 @@
         <v-btn
           v-bind="attrs"
           v-on="on"
+          color="red"
           :bottom="true"
           :fixed="true"
           :right="true"
+          fab
+          dark
+          large
           @click="postDialogBool = !postDialogBool"
         >
-          タスク作成
+          <!-- タスク作成 -->
+          <v-icon dark>mdi-plus</v-icon>
         </v-btn>
       </template>
       <v-card>
@@ -54,10 +59,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="postCancel"
-            >Close</v-btn
-          >
-          <v-btn color="blue darken-1" text @click="postDialogBool = false"
+          <v-btn color="red darken-2" @click="postCancel">Close</v-btn>
+          <v-btn color="green darken-1" @click="postDialogBool = false"
             >Save</v-btn
           >
         </v-card-actions>
@@ -82,10 +85,10 @@ export default {
   }),
 
   methods: {
-    postCancel(){
+    postCancel() {
       this.postDialogBool = false
       this.$store.dispatch('tasks/postAllReset')
-    }
+    },
   },
 
   computed: {
