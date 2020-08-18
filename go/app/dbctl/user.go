@@ -4,7 +4,6 @@ import "crypto/sha256"
 
 // User はデータベースから取得したユーザーのデータを扱うための構造体
 type User struct {
-	ID    int    `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 	Pass  string `json:"pass"`
