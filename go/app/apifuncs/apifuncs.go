@@ -102,12 +102,12 @@ func UsersLogin(w http.ResponseWriter, r *http.Request) {
 	data,err=dbctl.Login(data.Email,data.Pass)	
 	if err!=nil{
 		w.WriteHeader(http.StatusServiceUnavailable)
-		log.Println("io error")
+		log.Println("database error")
 		return
 	}
 
 	//データベースから受け取った情報をjson型にする
-	name:="{\"name\":"+data.Name+"}"
+	name:="{\"name\":"+data.Name+"}"+","
 	token:="{\"token\":"+data.Token+"}"
 
 
@@ -125,6 +125,13 @@ func UsersSignUp(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
 	w.Header().Set("Access-Control-Allow-Headers","*")
 
+/* 	jsonBytes,err:=ioutil.ReadAll(r.Body)
+	if err!=nil{
+		w.WriteHeader(http.StatusServiceUnavailable)
+		log.Println("io error")
+		return
+	}
+ */
 
 
 
