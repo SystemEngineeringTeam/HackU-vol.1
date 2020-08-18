@@ -116,7 +116,7 @@ export const mutations = {
 export const actions = {
   async setTasks({ rootState, commit }) {
     await axios
-      .get('localhost:8080/tasks', {
+      .get(process.env.URL_TASKS, {
         params: { userToken: rootState.user.token },
       })
       .then((res) => {
@@ -126,7 +126,7 @@ export const actions = {
 
   async postTask({ rootState, commit, dispatch }) {
     await axios
-      .post('localhost:8080/tasks', rootState.tasks.post, {
+      .post(process.env.URL_TASKS, rootState.tasks.post, {
         params: { userToken: rootState.user.token },
       })
       .then((res) => {
@@ -148,7 +148,7 @@ export const actions = {
   async successTask({ state, rootState, commit }, taskID) {
     await axios
       .post(
-        'localhost:8080/tasks/success',
+        process.env.URL_TASKS_SUCCESS,
         {},
         { params: { taskID: taskID, userToken: rootState.user.token } }
       )
