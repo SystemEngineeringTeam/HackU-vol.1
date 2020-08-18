@@ -3,13 +3,7 @@
     <v-row justify="center">
       <v-col md="4" sm="8" xs="10">
         <v-form ref="form" v-model="valid">
-          <h1>サインアップ</h1>
-          <v-text-field
-            v-model="name"
-            label="ユーザーネーム"
-            required
-            outlined
-          ></v-text-field>
+          <h1>ログイン</h1>
 
           <v-text-field
             v-model="email"
@@ -45,7 +39,6 @@ export default {
   data() {
     return {
       valid: false,
-      name: '',
       email: '',
       pass: '',
     }
@@ -53,12 +46,11 @@ export default {
   methods: {
     create_user() {
       const post_json = {
-        name: this.name,
         email: this.email,
         pass: this.pass,
       }
       console.log(post_json)
-      axios.post(process.env.URL_SIGNUP, post_json).then((res) => {
+      axios.post(process.env.URL_LOGIN, post_json).then((res) => {
         if (res.status == 200) {
           console.log('ok!')
         }

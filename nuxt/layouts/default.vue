@@ -40,6 +40,9 @@
       <v-btn color="primary" to="/signup">
         signup
       </v-btn>
+      <v-btn color="primary" to="/login">
+        login
+      </v-btn>
       <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>mdi-menu</v-icon>
       </v-btn>
