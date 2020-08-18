@@ -32,17 +32,17 @@ create table user_and_task_links(
 );
 
 insert into 
-    weights(degree) 
+    weights(id,degree) 
 values
-    ("ぬるい");
+    (1,"ぬるい");
 
 insert into 
-    weights(degree) 
+    weights(id,degree) 
 values
-    ("ふつう");
+    (2,"ふつう");
 
 insert into 
-    weights(degree) 
+    weights(id,degree) 
 values
-    ("えぐい");
+    (3,"えぐい");
 
