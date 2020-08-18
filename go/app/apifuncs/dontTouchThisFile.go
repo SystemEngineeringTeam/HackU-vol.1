@@ -1,7 +1,7 @@
 package apifuncs
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 
 	"set1.ie.aitech.ac.jp/HackU_vol_1/dbctl"
@@ -9,9 +9,14 @@ import (
 
 // DBTest is ..
 func DBTest(w http.ResponseWriter, r *http.Request) {
-	err := dbctl.RegisterNewUser(dbctl.User{Name: "Hoge", Email: "hoge@hoge.jp", Pass: "hogehoge"})
+	// err := dbctl.RegisterNewUser(dbctl.User{Name: "Hoge", Email: "hoge@hoge.jp", Pass: "hogehoge"})
+	// if err != nil {
+	// 	log.Fatal(err)
+	// 	return
+	// }
+	id, err := dbctl.RegisterNewTask("56f91b5f3668c470912be72ea6cbb0567cfdc0e6ab2266505f3f4b30bab989c6", dbctl.Task{Title: "fuga", Weight: "えぐい"})
 	if err != nil {
-		log.Fatal(err)
 		return
 	}
+	fmt.Println(id)
 }
