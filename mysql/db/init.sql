@@ -46,3 +46,18 @@ insert into
 values
     (3,"えぐい");
 
+insert into
+    users(id,name,email,password,token)
+values
+    (1,"Hoge","hoge@hoge.jp","4c716d4cf211c7b7d2f3233c941771ad0507ea5bacf93b492766aa41ae9f720d","56f91b5f3668c470912be72ea6cbb0567cfdc0e6ab2266505f3f4b30bab989c6");
+
+insert into
+    tasks(title,deadline_date,deadline_time,description,weight_id,isAchieve)
+values
+    ("睡眠","2020-08-28","21:00:00","ねる",1,false);
+
+insert into
+    user_and_task_links(user_id,task_id)
+values
+    (1,1);
+
