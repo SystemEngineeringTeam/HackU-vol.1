@@ -54,10 +54,10 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 //TaskSuccess は/tasks/successに対する処理(taskを達成した時の処理)
 func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 
-	q := r.URL.Query()
-	userToken := q["userToken"]
-	userTOken := q["usertaskID"]
-
+/* 	q := r.URL.Query()
+	taskID := q["userToken"][0]
+	userToken := q["usertaskID"][0] */
+	
 	//セキリティ設定
 	w.Header().Set("Access-Control-Allow-Origin", "*")                       // Allow any access.
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
