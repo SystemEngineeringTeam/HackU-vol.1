@@ -13,7 +13,7 @@ func main() {
 	http.HandleFunc("/users/login", apifuncs.UsersLogin)
 	http.HandleFunc("/users/signup", apifuncs.UsersSignUp)
 
-	http.HandleFunc("/test/database")
+	http.HandleFunc("/test/database", apifuncs.DBTest)
 
 	http.ListenAndServe(":80", nil)
 }
