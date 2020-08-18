@@ -84,14 +84,14 @@ export const actions = {
             })
     },
 
-    async postTask({ rootState, commit , dispatch}) {
+    async postTask({ rootState, commit, dispatch }) {
         await axios.post("localhost:8080/tasks", rootState.tasks.post, { params: { userToken: rootState.user.token } })
-        .then((res) => {
-            if (res.status === 200) {
-                commit("addTask", res.data);
-                dispatch("postAllReset");
-            }
-        })
+            .then((res) => {
+                if (res.status === 200) {
+                    commit("addTask", res.data);
+                    dispatch("postAllReset");
+                }
+            })
     },
 
     postAllReset(context) {
@@ -100,5 +100,15 @@ export const actions = {
         context.commit("setPostDeadlineTime", "");
         context.commit("setPostDescription", "");
         context.commit("setPostWeight", "");
+    },
+
+    async successTask({state,rootState,commit}, taskID) {
+        await axios.post("localhost:8080/tasks/success", {}, { params: { taskID: taskID, userToken: rootState.user.token} })
+            .then((res) => {
+                if(res.status === 200){
+                    let index = state.tasks.findIndex((element) => element.id === taskID);
+                    commit("removeTask",index);
+                }
+            })
     }
 }
