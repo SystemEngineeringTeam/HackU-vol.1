@@ -1,6 +1,7 @@
 package apifuncs
 
 import (
+	"io/ioutil"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -29,6 +30,7 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			w.WriteHeader(http.StatusServiceUnavailable)
 			log.Fatal(err)
+			return
 		}
 
 		//バイト型のjsonで受け取る
@@ -36,6 +38,7 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			w.WriteHeader(http.StatusServiceUnavailable)
 			log.Fatal(err)
+			return
 		}
 
 		jsonString := string(jsonBytes)
@@ -62,6 +65,7 @@ func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 	//セキリティ設定
 	w.Header().Set("Access-Control-Allow-Origin", "*")                       // Allow any access.
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
+	w.Header().Set("Access-Control-Allow-Headers","*")
 
 	if r.Method == http.MethodPost {
 
@@ -77,15 +81,57 @@ func UsersLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
 	w.Header().Set("Access-Control-Allow-Headers","*")
 
+	jsonBytes,err:=ioutil.ReadAll(r.Body)
+
+	if err!=nil{
+		w.WriteHeader(http.StatusServiceUnavailable)
+		log.Println("io error")
+		return
+	}
+	
+	//構造体の初期化 
+	data:=dbctl.User{}
+
+	if err:=json.Unmarshal(jsonBytes,&data);err!=nil{
+		w.WriteHeader(http.StatusServiceUnavailable)
+		fmt.Println("JSON Unmarshal error:", err)
+		return
+	}
+
+	//データベースからトークンを取得(string型)
+	data,err=dbctl.Login(data.Email,data.Pass)	
+	if err!=nil{
+		w.WriteHeader(http.StatusServiceUnavailable)
+		log.Println("io error")
+		return
+	}
+
+	//データベースから受け取った情報をjson型にする
+	name:="{\"name\":"+data.Name+"}"
+	token:="{\"token\":"+data.Token+"}"
+
+
+	//クライアントに渡す
+	fmt.Fprintf(w,name)
+	fmt.Fprintf(w,token)
+			
 	w.WriteHeader(http.StatusOK)
 }
 
 //UsersSignUp は/users/signupに対する処理
 func UsersSignUp(w http.ResponseWriter, r *http.Request) {
-	//セキリティ設定
+	//セキュリティ設定
 	w.Header().Set("Access-Control-Allow-Origin", "*")                       // Allow any access.
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
 	w.Header().Set("Access-Control-Allow-Headers","*")
-	
-	w.WriteHeader(http.StatusOK)
+
+
+
+
+
+
+
+	w.WriteHeader(http.StatusOK)		
 }
+
+
