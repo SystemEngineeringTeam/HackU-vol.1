@@ -1,8 +1,12 @@
 package apifuncs
 
 import (
+	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
-	"net/url"
+
+	"set1.ie.aitech.ac.jp/HackU_vol_1/dbctl"
 )
 
 //TaskResponse は/tasksに対する処理をする
@@ -11,13 +15,35 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 	//セキリティ設定
 	w.Header().Set("Access-Control-Allow-Origin", "*")                       // Allow any access.
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
-	
-	q:=r.URL.Query()
-	userToken:=q["userToken"]
 
+	q := r.URL.Query()
+	userToken := q["userToken"][0]
 
+	//getメソッドの時
 	if r.Method == http.MethodGet {
-	
+
+		//タスクを取得
+		tasks, err := dbctl.CallTasks(userToken)
+
+		if err != nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			log.Fatal(err)
+		}
+
+		//バイト型のjsonで受け取る
+		jsonBytes, err := json.Marshal(tasks)
+		if err != nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			log.Fatal(err)
+		}
+
+		jsonString := string(jsonBytes)
+
+		// httpステータスコードを返す<-New
+		w.WriteHeader(http.StatusOK)
+		// JSONを返す
+		fmt.Fprintln(w, jsonString)
+
 	} else if r.Method == http.MethodPost {
 
 	}
@@ -27,17 +53,17 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 
 //TaskSuccess は/tasks/successに対する処理(taskを達成した時の処理)
 func TaskSuccess(w http.ResponseWriter, r *http.Request) {
-	
-	q:=r.URL.Query()
-	userToken:=q["userToken"]
-	userTOken:=q["usertaskID"]
+
+	q := r.URL.Query()
+	userToken := q["userToken"]
+	userTOken := q["usertaskID"]
 
 	//セキリティ設定
 	w.Header().Set("Access-Control-Allow-Origin", "*")                       // Allow any access.
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
 
 	if r.Method == http.MethodPost {
-		
+
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -60,11 +86,3 @@ func UsersSignUp(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
-
-
-
-
-	
-	
-
-
