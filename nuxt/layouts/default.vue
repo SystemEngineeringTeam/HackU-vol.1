@@ -5,7 +5,7 @@
       <v-spacer />
       <template v-if="$store.state.user.name">
         <v-toolbar-title class="mr-2" v-text="$store.state.user.name" />
-        <v-btn color="red" to="/login">
+        <v-btn color="red" @click="logout">
           logout
         </v-btn>
       </template>
@@ -32,6 +32,11 @@ export default {
     return {
       title: 'Vuetify.js',
     }
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('user/logout')
+    },
   },
 }
 </script>
