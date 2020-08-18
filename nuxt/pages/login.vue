@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   data() {
     return {
@@ -49,7 +48,7 @@ export default {
         email: this.email,
         pass: this.pass,
       }
-      this.$store.dispatch("login", post_json)
+      this.$store.dispatch("user/login", post_json)
     },
   },
 }
