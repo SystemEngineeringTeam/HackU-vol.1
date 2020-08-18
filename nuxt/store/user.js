@@ -34,4 +34,9 @@ export const actions = {
       }
     })
   },
+
+  logout({ commit }) {
+    commit('setToken', '')
+    commit('setName', '')
+  },
 }
