@@ -4,7 +4,7 @@ export const state = () => ({
     tasks: [
         {
             id: 0,
-            name: "ごはん　たべる",
+            title: "ごはん　たべる",
             deadlineDate: "2020-08-21",
             deadlineTime: "12:00:00",
             description: "ふくだくんを焼いて食べる",
@@ -12,7 +12,7 @@ export const state = () => ({
         },
         {
             id: 1,
-            name: "うああああ",
+            title: "うああああ",
             deadlineDate: "2020-8-22",
             deadlineTime: "09:12:00",
             description: "じょぼじょぼのじょぼじょぼりん",
@@ -20,7 +20,7 @@ export const state = () => ({
         },
         {
             id: 2,
-            name: "ウホウホミッドナイト",
+            title: "ウホウホミッドナイト",
             deadlineDate: "2020-8-22",
             deadlineTime: "21:30:00",
             description: "ウホウホ！！！？！？？！？！？！？！？！？ウホウホウホウホウホウホウホ！！！！ウホホホホホホホホホｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗウッキーーーーーーーーー！！！！！！！！！！！！！！！！！ｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗ",
@@ -29,7 +29,7 @@ export const state = () => ({
     ],
 
     post: {
-        name: "",
+        title: "",
         deadlineDate: "",
         deadlineTime: "",
         description: "",
@@ -55,8 +55,8 @@ export const mutations = {
         state.tasks.splice(index, 1);
     },
 
-    setPostName(state, name) {
-        state.post.name = name;
+    setPostTitle(state, title) {
+        state.post.title = title;
     },
 
     setPostDeadlineDate(state, deadlineDate) {
@@ -95,7 +95,7 @@ export const actions = {
     },
 
     postAllReset(context) {
-        context.commit("setPostName", "");
+        context.commit("setPostTitle", "");
         context.commit("setPostDeadlineDate", "");
         context.commit("setPostDeadlineTime", "");
         context.commit("setPostDescription", "");
