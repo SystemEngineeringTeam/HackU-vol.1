@@ -23,39 +23,13 @@ export const actions = {
     })
   },
 
-  async postTask({ rootState, commit, dispatch }) {
-    await axios
-      .post('localhost:8080/tasks', rootState.tasks.post, {
-        params: { userToken: rootState.user.token },
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          commit('addTask', res.data)
-          dispatch('postAllReset')
-        }
-      })
-  },
-
-  postAllReset(context) {
-    context.commit('setPostTitle', '')
-    context.commit('setPostDeadlineDate', '')
-    context.commit('setPostDeadlineTime', '')
-    context.commit('setPostDescription', '')
-    context.commit('setPostWeight', '')
-  },
-
-  async successTask({ state, rootState, commit }, taskID) {
-    await axios
-      .post(
-        'localhost:8080/tasks/success',
-        {},
-        { params: { taskID: taskID, userToken: rootState.user.token } }
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          let index = state.tasks.findIndex((element) => element.id === taskID)
-          commit('removeTask', index)
-        }
-      })
+  async login({ commit }, post_json) {
+    await axios.post(process.env.URL_LOGIN, post_json).then((res) => {
+      if (res.status == 200) {
+        commit('setToken', res.data.token)
+        commit('setName', res.data.name)
+        this.$router.push('/')
+      }
+    })
   },
 }

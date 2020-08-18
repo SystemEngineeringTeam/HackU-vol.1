@@ -57,13 +57,7 @@ export default {
         email: this.email,
         pass: this.pass,
       }
-      console.log(post_json)
-      axios.post(process.env.URL_SIGNUP, post_json).then((res) => {
-        if (res.status == 200) {
-          console.log('ok!')
-        }
-      })
-      this.$router.push('/')
+      this.$store.dispatch("signup", post_json)
     },
   },
 }
