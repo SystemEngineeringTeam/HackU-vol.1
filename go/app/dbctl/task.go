@@ -54,7 +54,7 @@ func callTaskIDsFromUserID(userID int) ([]int, error) {
 }
 
 func callTaskFromTaskID(taskID int) (Task, error) {
-	rows, err := db.Query("select id,title,deadlineDate,deadlineTime,description,weight from tasks where id=? and isAchieve=false", taskID)
+	rows, err := db.Query("select id,title,deadline_date,deadline_time,description,weight_id from tasks where id=? and isAchieve=false", taskID)
 	if err != nil {
 		return Task{}, err
 	}
