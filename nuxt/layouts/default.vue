@@ -3,12 +3,20 @@
     <v-app-bar fixed app>
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <v-btn class="mr-2" color="primary" to="/signup">
-        signup
-      </v-btn>
-      <v-btn color="primary" to="/login">
-        login
-      </v-btn>
+      <template v-if="$store.state.user.name">
+        <v-toolbar-title class="mr-2" v-text="$store.state.user.name" />
+        <v-btn color="red" to="/login">
+          logout
+        </v-btn>
+      </template>
+      <template v-else>
+        <v-btn class="mr-2" color="primary" to="/signup">
+          signup
+        </v-btn>
+        <v-btn color="primary" to="/login">
+          login
+        </v-btn>
+      </template>
     </v-app-bar>
     <v-main>
       <v-container>
