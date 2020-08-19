@@ -203,7 +203,6 @@ func TaskAchieveFlagChangeToTrue(token string, taskID int) error {
 		log.Printf(errFormat, err, f.Name(), file, line)
 		return err
 	}
-
 	isInvalidUserID := true
 	for _, tID := range tIDs {
 		if tID == taskID {

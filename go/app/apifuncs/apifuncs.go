@@ -1,11 +1,12 @@
 package apifuncs
 
 import (
-	"io/ioutil"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 
 	"set1.ie.aitech.ac.jp/HackU_vol_1/dbctl"
 )
@@ -16,7 +17,7 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 	//セキュリティ設定
 	w.Header().Set("Access-Control-Allow-Origin", "*")                       // Allow any access.
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
-	w.Header().Set("Access-Control-Allow-Headers","*")
+	w.Header().Set("Access-Control-Allow-Headers", "*")
 
 	q := r.URL.Query()
 	userToken := q["userToken"][0]
@@ -50,25 +51,62 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 
 	} else if r.Method == http.MethodPost {
 
-	}
+		//body読み込み
+		jsonBytes, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			fmt.Println("io error")
+			return
+		}
 
-	w.WriteHeader(http.StatusOK)
+		//構造体の初期化
+		data := dbctl.Task{}
+
+		//taskの構造体にbodyの値を入れる
+		if err := json.Unmarshal(jsonBytes, &data); err != nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			fmt.Println("JSON Unmarshal error:", err)
+			return
+		}
+
+		//taskの登録
+		taskID, err := dbctl.RegisterNewTask(userToken, data)
+		if err != nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			fmt.Println("database error", err)
+			return
+		}
+
+		//クライアントに返す
+		fmt.Fprintln(w, taskID)
+
+		w.WriteHeader(http.StatusOK)
+	}
 }
 
 //TaskSuccess は/tasks/successに対する処理(taskを達成した時の処理)
 func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 
-/* 	q := r.URL.Query()
-	taskID := q["userToken"][0]
-	userToken := q["usertaskID"][0] */
-	
 	//セキリティ設定
 	w.Header().Set("Access-Control-Allow-Origin", "*")                       // Allow any access.
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
-	w.Header().Set("Access-Control-Allow-Headers","*")
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+
+	//クエリのパラメータの取得
+	q := r.URL.Query()
+	userToken := q["userToken"][0]
+	stringUserID := q["usertaskID"][0]
 
 	if r.Method == http.MethodPost {
 
+		//数値に変換
+		numberUserID, err := strconv.Atoi(stringUserID)
+		if err != nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			log.Println("changeNumber error")
+			return
+		}		
+		dbctl.TaskAchieveFlagChangeToTrue(userToken, numberUserID)
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -79,42 +117,43 @@ func UsersLogin(w http.ResponseWriter, r *http.Request) {
 	//セキリティ設定
 	w.Header().Set("Access-Control-Allow-Origin", "*")                       // Allow any access.
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
-	w.Header().Set("Access-Control-Allow-Headers","*")
+	w.Header().Set("Access-Control-Allow-Headers", "*")
 
-	jsonBytes,err:=ioutil.ReadAll(r.Body)
+	jsonBytes, err := ioutil.ReadAll(r.Body)
 
-	if err!=nil{
+	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
 		log.Println("io error")
 		return
 	}
-	
-	//構造体の初期化 
-	data:=dbctl.User{}
 
-	if err:=json.Unmarshal(jsonBytes,&data);err!=nil{
+	//構造体の初期化
+	data := dbctl.User{}
+
+	if err := json.Unmarshal(jsonBytes, &data); err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
 		fmt.Println("JSON Unmarshal error:", err)
 		return
 	}
 
 	//データベースからトークンを取得(string型)
-	data,err=dbctl.Login(data.Email,data.Pass)	
-	if err!=nil{
+	data, err = dbctl.Login(data.Email, data.Pass)
+	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
 		log.Println("database error")
 		return
 	}
 
 	//データベースから受け取った情報をjson型にする
-	name:="{\"name\":"+data.Name+"}"+","
-	token:="{\"token\":"+data.Token+"}"
+	name := "{\"name\":" + data.Name + ","
+	token := "\"token\":" + data.Token + "}"
 
-
-	//クライアントに渡す
-	fmt.Fprintf(w,name)
-	fmt.Fprintf(w,token)
-			
+	//連結
+	namestoken:=name+token
+	
+	//クライアントに渡す	
+	fmt.Fprintf(w,namestoken)
+	
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -123,33 +162,31 @@ func UsersSignUp(w http.ResponseWriter, r *http.Request) {
 	//セキュリティ設定
 	w.Header().Set("Access-Control-Allow-Origin", "*")                       // Allow any access.
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
-	w.Header().Set("Access-Control-Allow-Headers","*")
+	w.Header().Set("Access-Control-Allow-Headers", "*")
 
-	jsonBytes,err:=ioutil.ReadAll(r.Body)
-	if err!=nil{
+	jsonBytes, err := ioutil.ReadAll(r.Body)
+	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
 		log.Println("io error")
 		return
 	}
 
 	//構造体の初期化
-	data:=dbctl.User{}
+	data := dbctl.User{}
 
-	if err:=json.Unmarshal(jsonBytes,&data);err!=nil{
+	if err := json.Unmarshal(jsonBytes, &data); err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
 		fmt.Println("JSON Unmarshal error:", err)
 		return
 	}
 
 	//ユーザ登録を行う
-	
-	if err:=dbctl.RegisterNewUser(data);err!=nil{
+
+	if err := dbctl.RegisterNewUser(data); err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
 		log.Println("database error")
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)		
+	w.WriteHeader(http.StatusOK)
 }
-
-
