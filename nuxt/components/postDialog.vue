@@ -47,7 +47,7 @@
               <v-col cols="4">
                 <v-select
                   v-model="weight"
-                  :items="weights"
+                  :items="$store.state.tasks.weights"
                   :menu-props="{ maxHeight: '400' }"
                   label="Select"
                   hint="tasks weight"
@@ -79,7 +79,6 @@ export default {
 
   data: () => ({
     postDialogBool: false,
-    weights: ['ぬるい', 'ふつう', 'えぐい'],
   }),
 
   methods: {
@@ -112,11 +111,10 @@ export default {
     },
     weight: {
       get() {
-        return this.weights[this.$store.state.tasks.post.weight]
+        return this.$store.state.tasks.post.weight
       },
       set(value) {
-        let index = this.weights.findIndex((element) => element === value)
-        this.$store.commit('tasks/setPostWeight', index)
+        this.$store.commit('tasks/setPostWeight', value)
       },
     },
   },
