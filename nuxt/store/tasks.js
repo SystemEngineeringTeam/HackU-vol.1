@@ -113,6 +113,10 @@ export const mutations = {
   setPostWeight(state, weight) {
     state.post.weight = weight
   },
+
+  setWeights(state, weights) {
+    state.weights = weights
+  },
 }
 
 export const actions = {
@@ -160,5 +164,13 @@ export const actions = {
           commit('removeTask', index)
         }
       })
+  },
+
+  async getWeights({ commit }) {
+    await axios.get(process.env.URL_WEIGHTS).then((res) => {
+      if (res.status === 200) {
+        commit('setWeights', res.data)
+      }
+    })
   },
 }

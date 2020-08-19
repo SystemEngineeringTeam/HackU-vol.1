@@ -118,5 +118,9 @@ export default {
       },
     },
   },
+
+  created() {
+    this.$store.dispatch('tasks/getWeights')
+  },
 }
 </script>

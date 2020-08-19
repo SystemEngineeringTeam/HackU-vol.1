@@ -4,6 +4,7 @@ module.exports = {
   URL_BASE: URL_BASE,
   URL_TASKS: URL_BASE + '/tasks',
   URL_TASKS_SUCCESS: URL_BASE + '/tasks/success',
+  URL_WEIGHTS: URL_BASE + '/tasks/weights',
   URL_USERS: URL_BASE + '/users',
   URL_SIGNUP: URL_BASE + '/users/signup',
   URL_LOGIN: URL_BASE + '/users/login',
