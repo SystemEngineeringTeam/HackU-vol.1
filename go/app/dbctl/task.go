@@ -224,7 +224,7 @@ func TaskAchieveFlagChangeToTrue(token string, taskID int) error {
 	return nil
 }
 
-// TaskAchieveFlagChangeToFalse はタスクの完了状況を達成済みにする関数
+// TaskAchieveFlagChangeToFalse はタスクの完了状況を未達成にする関数
 func TaskAchieveFlagChangeToFalse(token string, taskID int) error {
 	userID, err := callUserIDFromToken(token)
 	if err != nil {
