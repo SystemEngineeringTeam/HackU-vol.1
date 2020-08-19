@@ -22,7 +22,6 @@ export default {
   props: ["task"],
 
   data: () => ({
-    weight: ["ぬるい","ふつう","えぐい"]
   }),
 
   methods: {
@@ -33,7 +32,7 @@ export default {
 
   computed: {
     cardStr(){
-      return this.task.deadlineDate + " " + this.task.deadlineTime + " / " + this.weight[this.task.weight];
+      return this.task.deadlineDate + " " + this.task.deadlineTime + " / " + this.task.weight;
     }
   }
 };
