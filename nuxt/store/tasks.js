@@ -126,7 +126,7 @@ export const actions = {
 
   async postTask({ rootState, commit, dispatch }) {
     await axios
-      .post(process.env.URL_TASKS, rootState.tasks.post, {
+      .post(process.env.URL_TASKS, JSON.stringify(rootState.tasks.post), {
         params: { userToken: rootState.user.token },
       })
       .then((res) => {
