@@ -40,7 +40,7 @@ func Login(email, password string) (User, error) {
 
 	hashPass := sha256.Sum256([]byte(password))
 	encodePass := hex.EncodeToString(hashPass[:])
-	rows, err := db.Query("select token from users where email=? and password=?", email, encodePass)
+	rows, err := db.Query("select name,token from users where email=? and password=?", email, encodePass)
 	if err != nil {
 
 		pc, file, line, _ := runtime.Caller(0)
