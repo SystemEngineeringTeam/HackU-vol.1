@@ -72,6 +72,8 @@ export const state = () => ({
     description: '',
     weight: '',
   },
+
+  weights: ['ぬるい', 'ふつう', 'えぐい'],
 })
 
 export const mutations = {
