@@ -3,11 +3,15 @@
     <v-card-title class="justify-center">
       {{ task.title }}
     </v-card-title>
-    <v-card-subtitle>
-      {{cardStr}}
+    <v-card-subtitle v-if="subtitleBool">
+      <span>{{ this.task.deadlineDate }}</span>
+      <span v-if="deadlineSpaceBool">{{space}}</span>
+      <span>{{ this.task.deadlineTime }}</span>
+      <span v-if="weightSlashBool">/</span>
+      <span>{{ this.task.weight }}</span>
     </v-card-subtitle>
-    <v-card-text>
-      {{task.description}}
+    <v-card-text v-if="task.description !== ''">
+      {{ task.description }}
     </v-card-text>
     <v-card-actions class="justify-center">
       <v-btn @click="success">達成</v-btn>
@@ -17,23 +21,46 @@
 
 <script>
 export default {
-  name: "Task",
+  name: 'Task',
 
-  props: ["task"],
+  props: ['task'],
 
   data: () => ({
+    space: ' '
   }),
 
   methods: {
-    success: function(){
-      this.$store.dispatch("tasks/successTask",this.id);
-    }
+    success: function () {
+      this.$store.dispatch('tasks/successTask', this.task.id)
+    },
   },
 
   computed: {
-    cardStr(){
-      return this.task.deadlineDate + " " + this.task.deadlineTime + " / " + this.task.weight;
-    }
-  }
-};
+    subtitleBool() {
+      if (
+        this.task.deadlineDate === null &&
+        this.task.deadlineTime === null &&
+        this.task.weight === ''
+      ) {
+        return false
+      } else {
+        return true
+      }
+    },
+    deadlineSpaceBool() {
+      if (this.task.deadlineDate === null || this.task.deadlineTime === null) {
+        return false
+      } else {
+        return true
+      }
+    },
+    weightSlashBool() {
+      if (this.task.weight === '') {
+        return false
+      } else {
+        return true
+      }
+    },
+  },
+}
 </script>
