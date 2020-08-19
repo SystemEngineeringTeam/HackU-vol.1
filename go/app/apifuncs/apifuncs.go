@@ -97,18 +97,18 @@ func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 	//クエリのパラメータの取得
 	q := r.URL.Query()
 	userToken := q["userToken"][0]
-	stringUserID := q["usertaskID"][0]
+	stringTaskID := q["usertaskID"][0]
 
 	if r.Method == http.MethodPost {
 
 		//数値に変換
-		numberUserID, err := strconv.Atoi(stringUserID)
+		numberTaskID, err := strconv.Atoi(stringTaskID)
 		if err != nil {
 			w.WriteHeader(http.StatusServiceUnavailable)
-			log.Println("changeNumber error")
+			log.Println("changeNumber error")			
 			return
 		}
-		dbctl.TaskAchieveFlagChangeToTrue(userToken, numberUserID)
+		dbctl.TaskAchieveFlagChangeToTrue(userToken,numberTaskID)
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -151,12 +151,12 @@ func UsersLogin(w http.ResponseWriter, r *http.Request) {
 	token := "\"token\":" + data.Token + "}"
 
 	//連結
-	namestoken := name + token
+	nameAndToken := name + token
 
 	w.WriteHeader(http.StatusOK)
 
 	//クライアントに渡す
-	fmt.Fprintf(w, namestoken)
+	fmt.Fprintf(w, nameAndToken)
 }
 
 //UsersSignUp は/users/signupに対する処理
