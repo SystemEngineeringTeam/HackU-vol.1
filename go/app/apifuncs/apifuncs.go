@@ -77,10 +77,12 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		w.WriteHeader(http.StatusOK)
+
 		//クライアントに返す
 		fmt.Fprintln(w, taskID)
 
-		w.WriteHeader(http.StatusOK)
+		
 	}
 }
 
@@ -105,7 +107,7 @@ func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusServiceUnavailable)
 			log.Println("changeNumber error")
 			return
-		}		
+		}
 		dbctl.TaskAchieveFlagChangeToTrue(userToken, numberUserID)
 	}
 
@@ -149,12 +151,12 @@ func UsersLogin(w http.ResponseWriter, r *http.Request) {
 	token := "\"token\":" + data.Token + "}"
 
 	//連結
-	namestoken:=name+token
-	
-	//クライアントに渡す	
-	fmt.Fprintf(w,namestoken)
-	
+	namestoken := name + token
+
 	w.WriteHeader(http.StatusOK)
+
+	//クライアントに渡す
+	fmt.Fprintf(w, namestoken)
 }
 
 //UsersSignUp は/users/signupに対する処理
@@ -170,6 +172,9 @@ func UsersSignUp(w http.ResponseWriter, r *http.Request) {
 		log.Println("io error")
 		return
 	}
+/* 
+	content := string(jsonBytes)
+	log.Fatalln(content) */
 
 	//構造体の初期化
 	data := dbctl.User{}
