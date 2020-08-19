@@ -55,7 +55,7 @@ export default {
       }
     },
     weightSlashBool() {
-      if (this.task.weight === '') {
+      if (this.task.weight === '' || (this.task.deadlineDate === null && this.task.deadlineTime === null&&this.task.weight !== '')){
         return false
       } else {
         return true
