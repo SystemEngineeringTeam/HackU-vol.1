@@ -115,13 +115,14 @@ func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-//taskdifficulty は/tasks/weightsに対する処理
-func taskDifficulty(w http.ResponseWriter, r *http.Request) {
+
+//TaskDifficulty は/tasks/weightsに対する処理
+func TaskDifficulty(w http.ResponseWriter, r *http.Request) {
 	//セキリティ設定
 	w.Header().Set("Access-Control-Allow-Origin", "*")                       // Allow any access.
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
 	w.Header().Set("Access-Control-Allow-Headers", "*")
-
+		
 	//難易度をデータベースからもらう
 	weight,err:=dbctl.CallWeightsList()	
 	if err!=nil{
@@ -129,11 +130,14 @@ func taskDifficulty(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("database err",err)	
 		return	
 	}
-		
+
 	w.WriteHeader(http.StatusOK)
+
+	r.Header.Set("Content-Type", "application/json")
 
 	fmt.Fprintf(w,weight)
 }
+
 
 //UsersLogin は/users/loginに対する処理
 func UsersLogin(w http.ResponseWriter, r *http.Request) {
