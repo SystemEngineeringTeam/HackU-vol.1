@@ -39,3 +39,16 @@ func convertNullInt(n int) sql.NullInt64 {
 	}
 	return sql.NullInt64{Int64: int64(n), Valid: true}
 }
+
+func convertStringArrayToJSONArray(array []string) string {
+	ret := "["
+	for i, s := range array {
+		ret += `'` + s + `'`
+		if len(array)-1 != i {
+			ret += `, `
+		}
+	}
+	ret += "]"
+
+	return ret
+}

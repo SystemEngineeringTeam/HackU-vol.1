@@ -12,6 +12,7 @@ func main() {
 	http.HandleFunc("tasks/success", apifuncs.TaskSuccess)
 	http.HandleFunc("/users/login", apifuncs.UsersLogin)
 	http.HandleFunc("/users/signup", apifuncs.UsersSignUp)
+	http.HandleFunc("/users/weights",apifuncs.TaskDifficulty)
 	
 	http.HandleFunc("/test/database", apifuncs.DBTest)
 

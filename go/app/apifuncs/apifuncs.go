@@ -106,7 +106,7 @@ func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 		numberTaskID, err := strconv.Atoi(stringTaskID)
 		if err != nil {
 			w.WriteHeader(http.StatusServiceUnavailable)
-			log.Println("changeNumber error")
+			fmt.Println("changeNumber error",err)
 			return
 		}
 		dbctl.TaskAchieveFlagChangeToTrue(userToken, numberTaskID)
@@ -114,6 +114,30 @@ func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
+
+//TaskDifficulty は/tasks/weightsに対する処理
+func TaskDifficulty(w http.ResponseWriter, r *http.Request) {
+	//セキリティ設定
+	w.Header().Set("Access-Control-Allow-Origin", "*")                       // Allow any access.
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+		
+	//難易度をデータベースからもらう
+	weight,err:=dbctl.CallWeightsList()	
+	if err!=nil{
+		w.WriteHeader(http.StatusServiceUnavailable)
+		fmt.Println("database err",err)	
+		return	
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+	r.Header.Set("Content-Type", "application/json")
+
+	fmt.Fprintf(w,weight)
+}
+
 
 //UsersLogin は/users/loginに対する処理
 func UsersLogin(w http.ResponseWriter, r *http.Request) {
