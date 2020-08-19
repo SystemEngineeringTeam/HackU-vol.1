@@ -46,6 +46,7 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 
 		// httpステータスコードを返す<-New
 		w.WriteHeader(http.StatusOK)
+		r.Header.Set("Content-Type", "application/json")
 		// JSONを返す
 		fmt.Fprintln(w, jsonString)
 
@@ -78,11 +79,11 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 		}
 
 		w.WriteHeader(http.StatusOK)
+		r.Header.Set("Content-Type", "application/json")
 
 		//クライアントに返す
 		fmt.Fprintln(w, taskID)
 
-		
 	}
 }
 
@@ -105,10 +106,10 @@ func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 		numberTaskID, err := strconv.Atoi(stringTaskID)
 		if err != nil {
 			w.WriteHeader(http.StatusServiceUnavailable)
-			log.Println("changeNumber error")			
+			log.Println("changeNumber error")
 			return
 		}
-		dbctl.TaskAchieveFlagChangeToTrue(userToken,numberTaskID)
+		dbctl.TaskAchieveFlagChangeToTrue(userToken, numberTaskID)
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -146,17 +147,13 @@ func UsersLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//データベースから受け取った情報をjson型にする
-	name := "{\"name\":" + data.Name + ","
-	token := "\"token\":" + data.Token + "}"
-
-	//連結
-	nameAndToken := name + token
+	jsonString := `{"name":"` + data.Name + `","token":"` + data.Token + `"}`
 
 	w.WriteHeader(http.StatusOK)
+	r.Header.Set("Content-Type", "application/json")
 
 	//クライアントに渡す
-	fmt.Fprintf(w, nameAndToken)
+	fmt.Fprintf(w, jsonString)
 }
 
 //UsersSignUp は/users/signupに対する処理
@@ -172,9 +169,9 @@ func UsersSignUp(w http.ResponseWriter, r *http.Request) {
 		log.Println("io error")
 		return
 	}
-/* 
-	content := string(jsonBytes)
-	log.Fatalln(content) */
+	/*
+		content := string(jsonBytes)
+		log.Fatalln(content) */
 
 	//構造体の初期化
 	data := dbctl.User{}
