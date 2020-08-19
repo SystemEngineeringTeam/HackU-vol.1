@@ -20,9 +20,12 @@
 
           <v-text-field
             v-model="pass"
+            :append-icon="passwdShow ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="passwdShow ? 'text' : 'password'"
             label="パスワード"
             required
             outlined
+            @click:append="passwdShow = !passwdShow"
           ></v-text-field>
 
           <v-btn
@@ -47,6 +50,7 @@ export default {
       name: '',
       email: '',
       pass: '',
+      passwdShow: false,
     }
   },
   methods: {
