@@ -17,7 +17,7 @@ export const mutations = {
 
 export const actions = {
   async signup({}, post_json) {
-    await axios.post(process.env.URL_SIGNUP, post_json).then((res) => {
+    await axios.post(process.env.URL_SIGNUP, JSON.stringify(post_json)).then((res) => {
       if (res.status == 200) {
         console.log('ok!')
         this.$router.push('/login')
@@ -26,8 +26,10 @@ export const actions = {
   },
 
   async login({ commit }, post_json) {
-    await axios.post(process.env.URL_LOGIN, post_json).then((res) => {
+    await axios.post(process.env.URL_LOGIN, JSON.stringify(post_json)).then((res) => {
       if (res.status == 200) {
+        console.log(res.data)
+        console.log(res.data.token)
         commit('setToken', res.data.token)
         commit('setName', res.data.name)
         this.$router.push('/')
