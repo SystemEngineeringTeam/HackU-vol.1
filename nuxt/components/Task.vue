@@ -38,8 +38,8 @@ export default {
   computed: {
     subtitleBool() {
       if (
-        this.task.deadlineDate === null &&
-        this.task.deadlineTime === null &&
+        this.task.deadlineDate === '' &&
+        this.task.deadlineTime === '' &&
         this.task.weight === ''
       ) {
         return false
@@ -48,7 +48,7 @@ export default {
       }
     },
     deadlineSpaceBool() {
-      if (this.task.deadlineDate === null || this.task.deadlineTime === null) {
+      if (this.task.deadlineDate === '' || this.task.deadlineTime === '') {
         return false
       } else {
         return true
@@ -57,8 +57,8 @@ export default {
     weightSlashBool() {
       if (
         this.task.weight === '' ||
-        (this.task.deadlineDate === null &&
-          this.task.deadlineTime === null &&
+        (this.task.deadlineDate === '' &&
+          this.task.deadlineTime === '' &&
           this.task.weight !== '')
       ) {
         return false

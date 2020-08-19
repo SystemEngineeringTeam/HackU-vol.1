@@ -67,8 +67,8 @@ export const state = () => ({
 
   post: {
     title: '',
-    deadlineDate: null,
-    deadlineTime: null,
+    deadlineDate: '',
+    deadlineTime: '',
     description: '',
     weight: '',
   },
