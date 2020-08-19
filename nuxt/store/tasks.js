@@ -72,6 +72,8 @@ export const state = () => ({
     description: '',
     weight: '',
   },
+
+  weights: ['ぬるい', 'ふつう', 'えぐい'],
 })
 
 export const mutations = {
@@ -111,6 +113,10 @@ export const mutations = {
   setPostWeight(state, weight) {
     state.post.weight = weight
   },
+
+  setWeights(state, weights) {
+    state.weights = weights
+  },
 }
 
 export const actions = {
@@ -126,7 +132,7 @@ export const actions = {
 
   async postTask({ rootState, commit, dispatch }) {
     await axios
-      .post(process.env.URL_TASKS, rootState.tasks.post, {
+      .post(process.env.URL_TASKS, JSON.stringify(rootState.tasks.post), {
         params: { userToken: rootState.user.token },
       })
       .then((res) => {
@@ -139,8 +145,8 @@ export const actions = {
 
   postAllReset(context) {
     context.commit('setPostTitle', '')
-    context.commit('setPostDeadlineDate', '')
-    context.commit('setPostDeadlineTime', '')
+    context.commit('setPostDeadlineDate', null)
+    context.commit('setPostDeadlineTime', null)
     context.commit('setPostDescription', '')
     context.commit('setPostWeight', '')
   },
@@ -158,5 +164,13 @@ export const actions = {
           commit('removeTask', index)
         }
       })
+  },
+
+  async getWeights({ commit }) {
+    await axios.get(process.env.URL_WEIGHTS).then((res) => {
+      if (res.status === 200) {
+        commit('setWeights', res.data)
+      }
+    })
   },
 }

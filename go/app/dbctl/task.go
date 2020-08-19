@@ -1,5 +1,11 @@
 package dbctl
 
+import (
+	"errors"
+	"log"
+	"runtime"
+)
+
 // Task はデータベースから取得した値を扱うための構造体
 type Task struct {
 	ID           int    `json:"id"`
@@ -93,4 +99,163 @@ func callWeightDegreeFromWeightID(weightID int) (string, error) {
 	}
 
 	return degree, nil
+}
+
+func callWeightIDFromWeightDegree(degree string) (int, error) {
+	rows, err := db.Query("select id from weights where degree=?", degree)
+	if err != nil {
+		return -1, err
+	}
+
+	id := 0
+	for rows.Next() {
+		rows.Scan(&id)
+	}
+
+	return id, nil
+}
+
+// RegisterNewTask は新しいタスクを登録する関数
+func RegisterNewTask(token string, t Task) (int, error) {
+	weightID, err := callWeightIDFromWeightDegree(t.Weight)
+	if err != nil || weightID == 0 {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return -1, err
+	}
+
+	_, err = db.Query("insert into tasks(title,deadline_date,deadline_time,description,weight_id,isAchieve) values(?,?,?,?,?,false)", t.Title, convertNullString(t.DeadlineDate), convertNullString(t.DeadlineTime), convertNullString(t.Description), convertNullInt(weightID))
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return -1, err
+	}
+
+	newTaskID, err := callTaskIDFromTaskTitle(t.Title)
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return -1, err
+	}
+
+	userID, err := callUserIDFromToken(token)
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return -1, err
+	}
+
+	err = linkTaskIDAndUserID(newTaskID, userID)
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return -1, err
+	}
+
+	return newTaskID, err
+}
+
+func callTaskIDFromTaskTitle(title string) (int, error) {
+	rows, err := db.Query("select id from tasks where title=?", title)
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return -1, err
+	}
+	id := -1
+	for rows.Next() {
+		rows.Scan(&id)
+	}
+
+	return id, nil
+}
+
+func linkTaskIDAndUserID(taskID, userID int) error {
+	_, err := db.Query("insert into user_and_task_links(task_id,user_id) values(?,?)", taskID, userID)
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return err
+	}
+	return nil
+}
+
+// TaskAchieveFlagChangeToTrue はタスクの完了状況を達成済みにする関数
+func TaskAchieveFlagChangeToTrue(token string, taskID int) error {
+	userID, err := callUserIDFromToken(token)
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return err
+	}
+	tIDs, err := callTaskIDsFromUserID(userID)
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return err
+	}
+	isInvalidUserID := true
+	for _, tID := range tIDs {
+		if tID == taskID {
+			isInvalidUserID = false
+		}
+	}
+	if isInvalidUserID {
+		return errors.New("Invalid userID")
+	}
+
+	_, err = db.Query("update tasks set isAchieve=true where id=?", taskID)
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return err
+	}
+	return nil
+}
+
+// TaskAchieveFlagChangeToFalse はタスクの完了状況を未達成にする関数
+func TaskAchieveFlagChangeToFalse(token string, taskID int) error {
+	userID, err := callUserIDFromToken(token)
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return err
+	}
+	tIDs, err := callTaskIDsFromUserID(userID)
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return err
+	}
+
+	isInvalidUserID := true
+	for _, tID := range tIDs {
+		if tID == taskID {
+			isInvalidUserID = false
+		}
+	}
+	if isInvalidUserID {
+		return errors.New("Invalid userID")
+	}
+
+	_, err = db.Query("update tasks set isAchieve=false where id=?", taskID)
+	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
+		return err
+	}
+	return nil
 }

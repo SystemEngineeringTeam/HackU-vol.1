@@ -83,6 +83,21 @@ paths:
         200:
           "description": "A successful response."
 
+  /tasks/weights:
+    get:
+      tags:
+        - "tasks"
+      summary: "タスクに付けれる難易度一覧API"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          "description": "A successful response."
+          "schema":
+            "$ref": "#/definitions/WeightsGetResponse"
+
   /users/login:
     post:
       tags:
@@ -161,6 +176,10 @@ definitions:
     properties:
       id:
         type: "integer"
+  WeightsGetResponse:
+    type: "array"
+    items:
+      type: "string"
   LoginRequest:
     type: "object"
     properties:
