@@ -132,10 +132,14 @@ export const actions = {
 
   async postTask({ state, rootState, commit, dispatch }) {
     let post_json = JSON.parse(JSON.stringify(rootState.tasks.post))
+    if (post_json.deadlineDate && post_json.deadlineTime){
+      post_json.deadlineTime = post_json.deadlineTime + ":00"
+    }
     if (post_json.deadlineDate && !post_json.deadlineTime) {
       post_json.deadlineTime = '23:59:59'
     } else if (!post_json.deadlineDate && post_json.deadlineTime) {
       post_json.deadlineDate = new Date().toISOString().substr(0, 10)
+      post_json.deadlineTime = post_json.deadlineTime + ":00"
     } else {
       post_json.deadlineDate = ''
       post_json.deadlineTime = ''
