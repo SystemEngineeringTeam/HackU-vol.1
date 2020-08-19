@@ -261,13 +261,13 @@ func TaskAchieveFlagChangeToFalse(token string, taskID int) error {
 }
 
 // CallWeightsList は難易度一覧を返す関数
-func CallWeightsList() ([]string, error) {
+func CallWeightsList() (string, error) {
 	rows, err := db.Query("select degree from weights")
 	if err != nil {
 		pc, file, line, _ := runtime.Caller(0)
 		f := runtime.FuncForPC(pc)
 		log.Printf(errFormat, err, f.Name(), file, line)
-		return nil, err
+		return "", err
 	}
 
 	weights := make([]string, 0, 0)
@@ -276,6 +276,7 @@ func CallWeightsList() ([]string, error) {
 		rows.Scan(&w)
 		weights = append(weights, w)
 	}
+	arrayString := convertStringArrayToJSONArray(weights)
 
-	return weights, nil
+	return arrayString, nil
 }
