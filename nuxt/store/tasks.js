@@ -130,9 +130,18 @@ export const actions = {
       })
   },
 
-  async postTask({state, rootState, commit, dispatch }) {
+  async postTask({ state, rootState, commit, dispatch }) {
+    let post_json = JSON.parse(JSON.stringify(rootState.tasks.post))
+    if (post_json.deadlineDate && !post_json.deadlineTime) {
+      post_json.deadlineTime = '23:59:59'
+    } else if (!post_json.deadlineDate && post_json.deadlineTime) {
+      post_json.deadlineDate = new Date().toISOString().substr(0, 10)
+    } else {
+      post_json.deadlineDate = ''
+      post_json.deadlineTime = ''
+    }
     await axios
-      .post(process.env.URL_TASKS, JSON.stringify(rootState.tasks.post), {
+      .post(process.env.URL_TASKS, JSON.stringify(post_json), {
         params: { userToken: rootState.user.token },
       })
       .then((res) => {
@@ -143,7 +152,7 @@ export const actions = {
             deadlineDate: state.post.deadlineDate,
             deadlineTime: state.post.deadlineTime,
             description: state.post.description,
-            weight: state.post.weight
+            weight: state.post.weight,
           }
           commit('addTask', new_task)
           dispatch('postAllReset')
