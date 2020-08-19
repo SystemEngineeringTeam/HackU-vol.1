@@ -139,8 +139,8 @@ export const actions = {
 
   postAllReset(context) {
     context.commit('setPostTitle', '')
-    context.commit('setPostDeadlineDate', '')
-    context.commit('setPostDeadlineTime', '')
+    context.commit('setPostDeadlineDate', null)
+    context.commit('setPostDeadlineTime', null)
     context.commit('setPostDescription', '')
     context.commit('setPostWeight', '')
   },
