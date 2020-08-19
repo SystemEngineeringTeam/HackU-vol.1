@@ -5,7 +5,7 @@
     </v-card-title>
     <v-card-subtitle v-if="subtitleBool">
       <span>{{ this.task.deadlineDate }}</span>
-      <span v-if="deadlineSpaceBool">{{space}}</span>
+      <span v-if="deadlineSpaceBool">{{ space }}</span>
       <span>{{ this.task.deadlineTime }}</span>
       <span v-if="weightSlashBool">/</span>
       <span>{{ this.task.weight }}</span>
@@ -26,7 +26,7 @@ export default {
   props: ['task'],
 
   data: () => ({
-    space: ' '
+    space: ' ',
   }),
 
   methods: {
@@ -55,7 +55,12 @@ export default {
       }
     },
     weightSlashBool() {
-      if (this.task.weight === '' || (this.task.deadlineDate === null && this.task.deadlineTime === null&&this.task.weight !== '')){
+      if (
+        this.task.weight === '' ||
+        (this.task.deadlineDate === null &&
+          this.task.deadlineTime === null &&
+          this.task.weight !== '')
+      ) {
         return false
       } else {
         return true
