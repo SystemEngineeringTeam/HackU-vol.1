@@ -43,7 +43,7 @@ func convertNullInt(n int) sql.NullInt64 {
 func convertStringArrayToJSONArray(array []string) string {
 	ret := "["
 	for i, s := range array {
-		ret += `'` + s + `'`
+		ret += `"` + s + `"`
 		if len(array)-1 != i {
 			ret += `, `
 		}
