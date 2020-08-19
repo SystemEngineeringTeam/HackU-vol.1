@@ -28,8 +28,6 @@ export const actions = {
   async login({ commit }, post_json) {
     await axios.post(process.env.URL_LOGIN, JSON.stringify(post_json)).then((res) => {
       if (res.status == 200) {
-        console.log(res.data)
-        console.log(res.data.token)
         commit('setToken', res.data.token)
         commit('setName', res.data.name)
         this.$router.push('/')
