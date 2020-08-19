@@ -132,14 +132,13 @@ export const actions = {
 
   async postTask({ state, rootState, commit, dispatch }) {
     let post_json = JSON.parse(JSON.stringify(rootState.tasks.post))
-    if (post_json.deadlineDate && post_json.deadlineTime){
-      post_json.deadlineTime = post_json.deadlineTime + ":00"
-    }
-    if (post_json.deadlineDate && !post_json.deadlineTime) {
+    if (post_json.deadlineDate && post_json.deadlineTime) {
+      post_json.deadlineTime = post_json.deadlineTime + ':00'
+    } else if (post_json.deadlineDate && !post_json.deadlineTime) {
       post_json.deadlineTime = '23:59:59'
     } else if (!post_json.deadlineDate && post_json.deadlineTime) {
       post_json.deadlineDate = new Date().toISOString().substr(0, 10)
-      post_json.deadlineTime = post_json.deadlineTime + ":00"
+      post_json.deadlineTime = post_json.deadlineTime + ':00'
     } else {
       post_json.deadlineDate = ''
       post_json.deadlineTime = ''
@@ -152,11 +151,11 @@ export const actions = {
         if (res.status === 200) {
           const new_task = {
             id: res.data,
-            title: state.post.title,
-            deadlineDate: state.post.deadlineDate,
-            deadlineTime: state.post.deadlineTime,
-            description: state.post.description,
-            weight: state.post.weight,
+            title: post_json.title,
+            deadlineDate: post_json.deadlineDate,
+            deadlineTime: post_json.deadlineTime,
+            description: post_json.description,
+            weight: post_json.weight,
           }
           commit('addTask', new_task)
           dispatch('postAllReset')
