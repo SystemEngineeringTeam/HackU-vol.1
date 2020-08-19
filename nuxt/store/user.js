@@ -1,14 +1,42 @@
+import axios from 'axios'
+
 export const state = () => ({
-    token: "aaa",
-    name: "uouo"
+  token: '',
+  name: '',
 })
 
 export const mutations = {
-    setToken(state,token){
-        state.token = token;
-    },
+  setToken(state, token) {
+    state.token = token
+  },
 
-    setName(state,name){
-        state.name = name;
-    }
+  setName(state, name) {
+    state.name = name
+  },
+}
+
+export const actions = {
+  async signup({}, post_json) {
+    await axios.post(process.env.URL_SIGNUP, JSON.stringify(post_json)).then((res) => {
+      if (res.status == 200) {
+        console.log('ok!')
+        this.$router.push('/login')
+      }
+    })
+  },
+
+  async login({ commit }, post_json) {
+    await axios.post(process.env.URL_LOGIN, JSON.stringify(post_json)).then((res) => {
+      if (res.status == 200) {
+        commit('setToken', res.data.token)
+        commit('setName', res.data.name)
+        this.$router.push('/')
+      }
+    })
+  },
+
+  logout({ commit }) {
+    commit('setToken', '')
+    commit('setName', '')
+  },
 }

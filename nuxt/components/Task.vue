@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="justify-center">
-      {{ task.name }}
+      {{ task.title }}
     </v-card-title>
     <v-card-subtitle>
       {{cardStr}}
@@ -10,8 +10,7 @@
       {{task.description}}
     </v-card-text>
     <v-card-actions class="justify-center">
-      <v-btn @click="test">更新</v-btn>
-      <v-btn @click="test">削除</v-btn>
+      <v-btn @click="success">達成</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -27,8 +26,8 @@ export default {
   }),
 
   methods: {
-    test: function(){
-
+    success: function(){
+      this.$store.dispatch("tasks/successTask",this.id);
     }
   },
 
