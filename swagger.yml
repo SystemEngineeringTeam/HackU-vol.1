@@ -83,7 +83,7 @@ paths:
         200:
           "description": "A successful response."
 
-  /tasks/whights:
+  /tasks/weights:
     get:
       tags:
         - "tasks"
@@ -96,7 +96,7 @@ paths:
         200:
           "description": "A successful response."
           "schema":
-            "$ref": "#/definitions/whightsGetResponse"
+            "$ref": "#/definitions/WeightsGetResponse"
 
   /users/login:
     post:
@@ -176,7 +176,7 @@ definitions:
     properties:
       id:
         type: "integer"
-  whightsGetResponse:
+  WeightsGetResponse:
     type: "array"
     items:
       type: "string"
