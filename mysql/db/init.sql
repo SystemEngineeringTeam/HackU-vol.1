@@ -55,12 +55,12 @@ values
     (3,"えぐい");
 
 insert into
-    hitpoints(hp)
+    user_parameters(hp)
 values
     (1000000);
 
 insert into
-    users(id,name,email,password,token,hp_id)
+    users(id,name,email,password,token,param_id)
 values
     (1,"Hoge","hoge@hoge.jp","4c716d4cf211c7b7d2f3233c941771ad0507ea5bacf93b492766aa41ae9f720d","56f91b5f3668c470912be72ea6cbb0567cfdc0e6ab2266505f3f4b30bab989c6",1);
 
