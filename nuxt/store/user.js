@@ -44,10 +44,12 @@ export const actions = {
         if (res.status == 200) {
           commit('setToken', res.data.token)
           commit('setName', res.data.name)
-        }else{
-          return
+          this.$router.push('/')
         }
       })
+  },
+
+  async getHP({state, commit}){
     await axios
       .get(process.env.URL_HP, {
         params: { userToken: state.token },
@@ -56,7 +58,6 @@ export const actions = {
         if (res.status === 200) {
           commit('setHP', res.data.HP)
           commit('setMaxHP', res.data.maxHP)
-          this.$router.push('/')
         }
       })
   },
