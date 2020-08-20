@@ -1,6 +1,6 @@
 use production_db;
 
-create table hitpoints(
+create table user_parameters(
     id int auto_increment not null primary key,
     hp int not null
 );
@@ -11,7 +11,7 @@ create table users(
     email varchar(128) not null,
     password varchar(128) not null,
     token varchar(128) not null,
-    hp_id int not null,
+    param_id int not null,
     foreign key (hp_id) references hitpoints(id) on delete cascade
 );
 

@@ -7,6 +7,8 @@ import (
 	"runtime"
 )
 
+const maxHP int = 1000000
+
 // User はデータベースから取得したユーザーのデータを扱うための構造体
 type User struct {
 	Name  string `json:"name"`
@@ -66,7 +68,18 @@ func RegisterNewUser(u User) error {
 	encodePass := hex.EncodeToString(hashPass[:])
 	hashEmail := sha256.Sum256([]byte(u.Email))
 	token := hex.EncodeToString(hashEmail[:])
-	_, err := db.Query("insert into users(name,email,password,token) values (?,?,?,?)", u.Name, u.Email, encodePass, token)
+
+	res, err := db.Exec("insert into hitpoints(hp) values (?)", maxHP)
+	if err != nil {
+		return err
+	}
+
+	hpID, err := res.LastInsertId()
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec("insert into users(name,email,password,token,hp_id) values (?,?,?,?,?)", u.Name, u.Email, encodePass, token, hpID)
 	if err != nil {
 
 		pc, file, line, _ := runtime.Caller(0)
