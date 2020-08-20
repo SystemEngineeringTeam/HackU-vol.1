@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card :outlined="true">
     <v-card-title class="justify-center">
       {{ task.title }}
     </v-card-title>
