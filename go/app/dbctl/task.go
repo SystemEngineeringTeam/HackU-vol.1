@@ -1,6 +1,7 @@
 package dbctl
 
 import (
+	"database/sql"
 	"errors"
 	"log"
 	"runtime"
@@ -71,9 +72,9 @@ func callTaskFromTaskID(taskID int) (Task, error) {
 	for rows.Next() {
 		id := 0
 		title := ""
-		date := ""
-		time := ""
-		description := ""
+		var date sql.NullString = sql.NullString{}
+		var time sql.NullString = sql.NullString{}
+		var description sql.NullString = sql.NullString{}
 		weightID := 0
 
 		rows.Scan(&id, &title, &date, &time, &description, &weightID)
@@ -82,7 +83,7 @@ func callTaskFromTaskID(taskID int) (Task, error) {
 			return Task{}, err
 		}
 
-		task = Task{ID: id, Title: title, DeadlineDate: date, DeadlineTime: time, Description: description, Weight: weightDegree}
+		task = Task{ID: id, Title: title, DeadlineDate: convertToString(date), DeadlineTime: convertToString(time), Description: convertToString(description), Weight: weightDegree}
 	}
 	return task, nil
 }
@@ -102,12 +103,16 @@ func callWeightDegreeFromWeightID(weightID int) (string, error) {
 }
 
 func callWeightIDFromWeightDegree(degree string) (int, error) {
+	if len(degree) <= 0 {
+		return 0, nil
+	}
+
 	rows, err := db.Query("select id from weights where degree=?", degree)
 	if err != nil {
 		return -1, err
 	}
 
-	id := 0
+	id := -1
 	for rows.Next() {
 		rows.Scan(&id)
 	}
@@ -118,14 +123,14 @@ func callWeightIDFromWeightDegree(degree string) (int, error) {
 // RegisterNewTask は新しいタスクを登録する関数
 func RegisterNewTask(token string, t Task) (int, error) {
 	weightID, err := callWeightIDFromWeightDegree(t.Weight)
-	if err != nil || weightID == 0 {
+	if err != nil || weightID == -1 {
 		pc, file, line, _ := runtime.Caller(0)
 		f := runtime.FuncForPC(pc)
 		log.Printf(errFormat, err, f.Name(), file, line)
 		return -1, err
 	}
 
-	_, err = db.Query("insert into tasks(title,deadline_date,deadline_time,description,weight_id,isAchieve) values(?,?,?,?,?,false)", t.Title, convertNullString(t.DeadlineDate), convertNullString(t.DeadlineTime), convertNullString(t.Description), convertNullInt(weightID))
+	_, err = db.Query("insert into tasks(title,deadline_date,deadline_time,description,weight_id,isAchieve) values(?,?,?,?,?,false)", t.Title, convertToNullString(t.DeadlineDate), convertToNullString(t.DeadlineTime), convertToNullString(t.Description), convertToNullInt(weightID))
 	if err != nil {
 		pc, file, line, _ := runtime.Caller(0)
 		f := runtime.FuncForPC(pc)
