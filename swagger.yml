@@ -8,6 +8,8 @@ tags:
     description: "タスク関連API"
   - name: "users"
     description: "ユーザー関連API"
+  - name: "HP"
+    description: "体力関連API"
 schemes:
   - "http"
 paths:
@@ -139,6 +141,27 @@ paths:
       responses:
         200:
           "description": "A successful response."
+  /hp:
+    get:
+      tags:
+        - "HP"
+      summary: "体力取得API"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "userToken"
+          in: "query"
+          description: "ログイン時に取得したtoken"
+          required: true
+          type: "string"
+      responses:
+        200:
+          "description": "A successful response."
+          "schema":
+            "$ref": "#/definitions/hpGetResponse"
+      
 
 definitions:
   TasksGetResponse:
@@ -203,3 +226,10 @@ definitions:
         type: "string"
       pass:
         type: "string"
+  hpGetResponse:
+    type: "object"
+    properties:
+      hp:
+        type: "integer"
+      maxHp:
+        type: "integer"
