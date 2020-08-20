@@ -130,7 +130,7 @@ func RegisterNewTask(token string, t Task) (int, error) {
 		return -1, err
 	}
 
-	_, err = db.Query("insert into tasks(title,deadline_date,deadline_time,description,weight_id,isAchieve,registered_datetime) values(?,?,?,?,?,false,Now())", t.Title, convertToNullString(t.DeadlineDate), convertToNullString(t.DeadlineTime), convertToNullString(t.Description), convertToNullInt(weightID))
+	res, err := db.Exec("insert into tasks(title,deadline_date,deadline_time,description,weight_id,isAchieve,registered_datetime) values(?,?,?,?,?,false,Now())", t.Title, convertToNullString(t.DeadlineDate), convertToNullString(t.DeadlineTime), convertToNullString(t.Description), convertToNullInt(weightID))
 	if err != nil {
 		pc, file, line, _ := runtime.Caller(0)
 		f := runtime.FuncForPC(pc)
@@ -138,7 +138,7 @@ func RegisterNewTask(token string, t Task) (int, error) {
 		return -1, err
 	}
 
-	newTaskID, err := callTaskIDFromTaskTitle(t.Title)
+	newTaskID, err := res.LastInsertId()
 	if err != nil {
 		pc, file, line, _ := runtime.Caller(0)
 		f := runtime.FuncForPC(pc)
@@ -154,7 +154,7 @@ func RegisterNewTask(token string, t Task) (int, error) {
 		return -1, err
 	}
 
-	err = linkTaskIDAndUserID(newTaskID, userID)
+	err = linkTaskIDAndUserID(int(newTaskID), userID)
 	if err != nil {
 		pc, file, line, _ := runtime.Caller(0)
 		f := runtime.FuncForPC(pc)
@@ -162,7 +162,7 @@ func RegisterNewTask(token string, t Task) (int, error) {
 		return -1, err
 	}
 
-	return newTaskID, err
+	return int(newTaskID), err
 }
 
 func callTaskIDFromTaskTitle(title string) (int, error) {
@@ -217,7 +217,7 @@ func TaskAchieveFlagChangeToTrue(token string, taskID int) error {
 		return errors.New("Invalid userID")
 	}
 
-	_, err = db.Query("update tasks set isAchieve=true where id=?", taskID)
+	_, err = db.Exec("update tasks set isAchieve=true where id=?", taskID)
 	if err != nil {
 		pc, file, line, _ := runtime.Caller(0)
 		f := runtime.FuncForPC(pc)
@@ -254,7 +254,7 @@ func TaskAchieveFlagChangeToFalse(token string, taskID int) error {
 		return errors.New("Invalid userID")
 	}
 
-	_, err = db.Query("update tasks set isAchieve=false where id=?", taskID)
+	_, err = db.Exec("update tasks set isAchieve=false where id=?", taskID)
 	if err != nil {
 		pc, file, line, _ := runtime.Caller(0)
 		f := runtime.FuncForPC(pc)
