@@ -1,11 +1,18 @@
 use production_db;
 
+create table hitpoints(
+    id int auto_increment not null primary key,
+    hp int not null
+);
+
 create table users(
     id int auto_increment not null primary key,
     name varchar(128) not null,
     email varchar(128) not null,
     password varchar(128) not null,
-    token varchar(128) not null
+    token varchar(128) not null,
+    hp_id int not null,
+    foreign key (hp_id) references hitpoints(id) on delete cascade
 );
 
 create table weights(
@@ -21,6 +28,7 @@ create table tasks(
     description varchar(128),
     weight_id int,
     isAchieve boolean not null,
+    registered_datetime datetime not null,
     foreign key (weight_id) references weights(id) on delete cascade
 );
 
@@ -47,14 +55,19 @@ values
     (3,"えぐい");
 
 insert into
-    users(id,name,email,password,token)
+    hitpoints(hp)
 values
-    (1,"Hoge","hoge@hoge.jp","4c716d4cf211c7b7d2f3233c941771ad0507ea5bacf93b492766aa41ae9f720d","56f91b5f3668c470912be72ea6cbb0567cfdc0e6ab2266505f3f4b30bab989c6");
+    (1000000);
 
 insert into
-    tasks(title,deadline_date,deadline_time,description,weight_id,isAchieve)
+    users(id,name,email,password,token,hp_id)
 values
-    ("睡眠","2020-08-28","21:00:00","ねる",1,false);
+    (1,"Hoge","hoge@hoge.jp","4c716d4cf211c7b7d2f3233c941771ad0507ea5bacf93b492766aa41ae9f720d","56f91b5f3668c470912be72ea6cbb0567cfdc0e6ab2266505f3f4b30bab989c6",1);
+
+insert into
+    tasks(title,deadline_date,deadline_time,description,weight_id,isAchieve,registered_datetime)
+values
+    ("睡眠","2020-08-28","21:00:00","ねる",1,false,Now());
 
 insert into
     user_and_task_links(user_id,task_id)
