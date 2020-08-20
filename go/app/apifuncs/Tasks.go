@@ -54,6 +54,10 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 		// httpステータスコードを返す<-New
 		w.WriteHeader(http.StatusOK)
 		r.Header.Set("Content-Type", "application/json")
+
+		if tasks[0].ID == 0 {
+			jsonString = "[]"
+		}
 		// JSONを返す
 		fmt.Fprintln(w, jsonString)
 

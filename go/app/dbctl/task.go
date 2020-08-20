@@ -40,6 +40,10 @@ func CallTasks(token string) ([]Task, error) {
 		tasks = append(tasks, t)
 	}
 
+	if len(tasks) == 0 {
+		return nil, nil
+	}
+
 	return tasks, nil
 }
 
