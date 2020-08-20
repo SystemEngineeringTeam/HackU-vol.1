@@ -130,7 +130,7 @@ func RegisterNewTask(token string, t Task) (int, error) {
 		return -1, err
 	}
 
-	_, err = db.Query("insert into tasks(title,deadline_date,deadline_time,description,weight_id,isAchieve) values(?,?,?,?,?,false)", t.Title, convertToNullString(t.DeadlineDate), convertToNullString(t.DeadlineTime), convertToNullString(t.Description), convertToNullInt(weightID))
+	_, err = db.Query("insert into tasks(title,deadline_date,deadline_time,description,weight_id,isAchieve,registered_datetime) values(?,?,?,?,?,false,Now())", t.Title, convertToNullString(t.DeadlineDate), convertToNullString(t.DeadlineTime), convertToNullString(t.Description), convertToNullInt(weightID))
 	if err != nil {
 		pc, file, line, _ := runtime.Caller(0)
 		f := runtime.FuncForPC(pc)
