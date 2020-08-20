@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card :outlined="true">
     <v-card-title class="justify-center">
       ステータス情報
     </v-card-title>

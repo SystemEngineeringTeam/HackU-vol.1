@@ -18,7 +18,7 @@
           <v-icon dark>mdi-plus</v-icon>
         </v-btn>
       </template>
-      <v-card>
+      <v-card :outlined="true">
         <v-card-title>
           タスクの作成
         </v-card-title>
