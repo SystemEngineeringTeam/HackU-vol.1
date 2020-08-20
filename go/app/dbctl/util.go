@@ -26,14 +26,14 @@ func init() {
 	}
 }
 
-func convertNullString(s string) sql.NullString {
+func convertToNullString(s string) sql.NullString {
 	if len(s) == 0 {
 		return sql.NullString{}
 	}
 	return sql.NullString{String: s, Valid: true}
 }
 
-func convertNullInt(n int) sql.NullInt64 {
+func convertToNullInt(n int) sql.NullInt64 {
 	if n == 0 {
 		return sql.NullInt64{}
 	}
@@ -51,4 +51,11 @@ func convertStringArrayToJSONArray(array []string) string {
 	ret += "]"
 
 	return ret
+}
+
+func convertToString(s sql.NullString) string {
+	if s.Valid {
+		return s.String
+	}
+	return ""
 }
