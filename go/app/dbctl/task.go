@@ -177,7 +177,6 @@ func callTaskIDFromTaskTitle(title string) (int, error) {
 	for rows.Next() {
 		rows.Scan(&id)
 	}
-
 	return id, nil
 }
 
