@@ -8,4 +8,5 @@ module.exports = {
   URL_USERS: URL_BASE + '/users',
   URL_SIGNUP: URL_BASE + '/users/signup',
   URL_LOGIN: URL_BASE + '/users/login',
+  URL_HP: URL_BASE + '/hp',
 }
