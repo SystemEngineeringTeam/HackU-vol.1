@@ -3,7 +3,7 @@ import axios from 'axios'
 export const state = () => ({
   token: '',
   name: '',
-  HP: 100,
+  HP: 75,
   maxHP: 100,
 })
 
@@ -20,9 +20,9 @@ export const mutations = {
     state.HP = HP
   },
 
-  setMaxHP(state, maxHP){
+  setMaxHP(state, maxHP) {
     state.maxHP = maxHP
-  }
+  },
 }
 
 export const actions = {
@@ -37,7 +37,7 @@ export const actions = {
       })
   },
 
-  async login({state, commit }, post_json) {
+  async login({ commit }, post_json) {
     await axios
       .post(process.env.URL_LOGIN, JSON.stringify(post_json))
       .then((res) => {
@@ -49,13 +49,14 @@ export const actions = {
       })
   },
 
-  async getHP({state, commit}){
+  async getHP({ state, commit }) {
     await axios
       .get(process.env.URL_HP, {
         params: { userToken: state.token },
       })
       .then((res) => {
         if (res.status === 200) {
+          console.log(235)
           commit('setHP', res.data.HP)
           commit('setMaxHP', res.data.maxHP)
         }
