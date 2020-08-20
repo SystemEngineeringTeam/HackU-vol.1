@@ -93,12 +93,12 @@ export default {
   },
   methods: {
     resetDeadline: function () {
-      this.$store.commit('tasks/setPostDeadlineDate', null)
-      this.$store.commit('tasks/setPostDeadlineTime', null)
+      this.$store.commit('tasks/setPostDeadlineDate', '')
+      this.$store.commit('tasks/setPostDeadlineTime', '')
     },
 
     dateInitial: function () {
-      if (this.date === null) {
+      if (this.date === '') {
         this.$store.commit(
           'tasks/setPostDeadlineDate',
           new Date().toISOString().substr(0, 10)
