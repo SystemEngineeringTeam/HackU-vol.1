@@ -55,7 +55,7 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		r.Header.Set("Content-Type", "application/json")
 
-		if tasks[0].ID == 0 {
+		if tasks == nil {
 			jsonString = "[]"
 		}
 		// JSONを返す
