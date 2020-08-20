@@ -25,7 +25,7 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 	var userToken string
 
 	if len(q["userToken"]) > 0 {
-		userToken = q["userToken"][0]
+		userToken = q["userToken"][0]				
 	} else {
 		fmt.Println("out of index")
 	}
@@ -123,7 +123,7 @@ func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("out of index")
 		return
 	}
-
+			
 	if r.Method == http.MethodPost {
 
 		//数値に変換
@@ -136,7 +136,7 @@ func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 
 		if err := dbctl.TaskAchieveFlagChangeToTrue(userToken, numberTaskID); err != nil {
 			w.WriteHeader(http.StatusServiceUnavailable)
-			fmt.Println("database error", err)
+			fmt.Println("database error", err)						
 			return
 		}
 

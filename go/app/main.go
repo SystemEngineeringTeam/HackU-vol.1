@@ -9,7 +9,7 @@ import (
 
 func main() {
 	http.HandleFunc("/tasks", apifuncs.TaskResponse)
-	http.HandleFunc("tasks/success", apifuncs.TaskSuccess)
+	http.HandleFunc("/tasks/success", apifuncs.TaskSuccess)
 	http.HandleFunc("/users/login", apifuncs.UsersLogin)
 	http.HandleFunc("/users/signup", apifuncs.UsersSignUp)
 	http.HandleFunc("/tasks/weights",apifuncs.TaskDifficulty)
