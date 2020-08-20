@@ -276,9 +276,11 @@ func CallWeightsList() (string, error) {
 
 	weights := make([]string, 0, 0)
 	for rows.Next() {
-		w := ""
+		w := sql.NullString{}
 		rows.Scan(&w)
-		weights = append(weights, w)
+		if w.Valid {
+			weights = append(weights, w.String)
+		}
 	}
 	arrayString := convertStringArrayToJSONArray(weights)
 
