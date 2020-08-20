@@ -25,7 +25,7 @@ export default {
 
   created() {
     this.$store.dispatch('tasks/setTasks')
-    //this.$store.dispatch("tasks/postTask");
+    this.$store.dispatch('user/getHP')
   },
 }
 </script>
