@@ -3,6 +3,7 @@ import axios from 'axios'
 export const state = () => ({
   token: '',
   name: '',
+  HP: 100,
 })
 
 export const mutations = {
@@ -13,6 +14,10 @@ export const mutations = {
   setName(state, name) {
     state.name = name
   },
+
+  setHP(state, HP){
+    state.HP = HP
+  }
 }
 
 export const actions = {
