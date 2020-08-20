@@ -96,4 +96,6 @@ export default {
     },
   },
   env: envSet,
+
+  css: [{ src: '~assets/css/styles.scss' }],
 }

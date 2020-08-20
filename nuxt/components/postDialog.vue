@@ -20,7 +20,7 @@
       </template>
       <v-card>
         <v-card-title>
-          <span class="headline">タスクの作成</span>
+          タスクの作成
         </v-card-title>
         <v-card-text>
           <v-container>
