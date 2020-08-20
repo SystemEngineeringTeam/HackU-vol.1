@@ -15,8 +15,11 @@
           <v-text-field
             v-model="pass"
             label="パスワード"
+            :append-icon="passwdShow ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="passwdShow ? 'text' : 'password'"
             required
             outlined
+            @click:append="passwdShow = !passwdShow"
           ></v-text-field>
 
           <v-btn
@@ -40,6 +43,7 @@ export default {
       valid: false,
       email: '',
       pass: '',
+      passwdShow: false,
     }
   },
   methods: {
@@ -48,7 +52,7 @@ export default {
         email: this.email,
         pass: this.pass,
       }
-      this.$store.dispatch("user/login", post_json)
+      this.$store.dispatch('user/login', post_json)
     },
   },
 }
