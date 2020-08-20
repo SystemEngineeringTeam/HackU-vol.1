@@ -3,7 +3,6 @@ package dbctl
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"log"
 	"runtime"
 )
@@ -130,8 +129,6 @@ func RegisterNewTask(token string, t Task) (int, error) {
 		log.Printf(errFormat, err, f.Name(), file, line)
 		return -1, err
 	}
-
-	fmt.Println(t.Title, convertToNullString(t.DeadlineDate), convertToNullString(t.DeadlineTime), convertToNullString(t.Description), convertToNullInt(weightID))
 
 	_, err = db.Query("insert into tasks(title,deadline_date,deadline_time,description,weight_id,isAchieve) values(?,?,?,?,?,false)", t.Title, convertToNullString(t.DeadlineDate), convertToNullString(t.DeadlineTime), convertToNullString(t.Description), convertToNullInt(weightID))
 	if err != nil {
