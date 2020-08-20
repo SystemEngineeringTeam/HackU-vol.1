@@ -146,7 +146,7 @@ func RegisterNewTask(token string, t Task) (int, error) {
 		pc, file, line, _ := runtime.Caller(0)
 		f := runtime.FuncForPC(pc)
 		log.Printf(errFormat, err, f.Name(), file, line)
-		return -1, err		
+		return -1, err
 	}
 
 	err = linkTaskIDAndUserID(newTaskID, userID)
