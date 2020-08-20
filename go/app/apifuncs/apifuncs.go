@@ -98,8 +98,8 @@ func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 	//クエリのパラメータの取得
 	q := r.URL.Query()
 	userToken := q["userToken"][0]
-	stringTaskID := q["usertaskID"][0]
-
+	stringTaskID := q["taskID"][0]
+	
 	if r.Method == http.MethodPost {
 
 		//数値に変換
