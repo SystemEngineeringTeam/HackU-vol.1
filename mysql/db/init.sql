@@ -12,7 +12,7 @@ create table users(
     password varchar(128) not null,
     token varchar(128) not null,
     param_id int not null,
-    foreign key (param_id) references hitpoints(id) on delete cascade
+    foreign key (param_id) references user_parameters(id) on delete cascade
 );
 
 create table weights(
