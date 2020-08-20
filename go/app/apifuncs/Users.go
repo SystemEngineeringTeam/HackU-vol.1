@@ -27,7 +27,7 @@ func UsersLogin(w http.ResponseWriter, r *http.Request) {
 
 	//構造体の初期化
 	data := dbctl.User{}
-	
+
 	if err := json.Unmarshal(jsonBytes, &data); err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
 		fmt.Println("JSON Unmarshal error:", err)
@@ -67,7 +67,7 @@ func UsersSignUp(w http.ResponseWriter, r *http.Request) {
 
 	/*
 		content := string(jsonBytes)
-		log.Fatalln(content) */		
+		log.Fatalln(content) */
 
 	//構造体の初期化
 	data := dbctl.User{}
