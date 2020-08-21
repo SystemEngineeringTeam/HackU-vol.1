@@ -4,31 +4,19 @@
       ステータス情報
     </v-card-title>
     <v-textarea solo readonly v-model="log"></v-textarea>
-    <v-progress-linear
-      v-if="getHP <= 25"
-      height="25"
-      color="red"
-      :value="getHP"
-    ></v-progress-linear>
-    <v-progress-linear
-      v-else-if="getHP <= 50"
-      height="25"
-      color="yellow"
-      :value="getHP"
-    ></v-progress-linear>
-    <v-progress-linear
-      v-else
-      height="25"
-      color="green"
-      :value="getHP"
-    ></v-progress-linear>
-    {{ this.$store.state.user.HP }}/{{ this.$store.state.user.maxHP }}
+    <HPGauge />
   </v-card>
 </template>
 
 <script>
+import HPGauge from '../components/HPGauge'
+
 export default {
   name: 'Logbox',
+
+  components: {
+    HPGauge,
+  },
 
   //props: [],
 
@@ -38,10 +26,6 @@ export default {
 
   methods: {},
 
-  computed: {
-    getHP() {
-      return (this.$store.state.user.HP / this.$store.state.user.maxHP) * 100
-    },
-  },
+  computed: {},
 }
 </script>
