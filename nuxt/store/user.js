@@ -63,8 +63,9 @@ export const actions = {
       })
   },
 
-  logout({ commit }) {
+  logout({ state, commit }) {
     commit('setToken', '')
     commit('setName', '')
+    commit('setHP', state.maxHP)
   },
 }
