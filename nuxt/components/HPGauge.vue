@@ -35,7 +35,7 @@ export default {
   methods: {
     lowerHP: function () {
       let hp = this.$store.state.user.HP
-      hp -= 1
+      hp = Math.max(0, hp - 1)
       this.$store.commit('user/setHP', hp)
     },
   },
@@ -48,6 +48,7 @@ export default {
 
   created() {
     this.$store.commit('user/setHP', 100)
+    //this.$store.commit('user/setMaxHP', 100)
     this.lowerHPid = setInterval(this.lowerHP, 1000)
   },
 
