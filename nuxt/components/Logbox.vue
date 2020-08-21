@@ -18,14 +18,45 @@ export default {
     HPGauge,
   },
 
-  //props: [],
-
   data: () => ({
-    log: 'log',
+    log: '',
+    writeLogid: null,
   }),
 
-  methods: {},
+  methods: {
+    writeLog: function () {
+      this.tasks.forEach((element) => {
+        this.log =
+          this.log +
+          element.title +
+          'の攻撃！' +
+          this.userName +
+          'は' +
+          1 +
+          'のダメージを受けた！\n'
+      })
+    },
+  },
 
-  computed: {},
+  computed: {
+    tasks: {
+      get() {
+        return this.$store.state.tasks.tasks
+      },
+    },
+    userName: {
+      get() {
+        return this.$store.state.user.name
+      },
+    },
+  },
+
+  created() {
+    this.writeLogid = setInterval(this.writeLog, 1000)
+  },
+
+  destroyed() {
+    setInterval(this.writeLogid)
+  },
 }
 </script>
