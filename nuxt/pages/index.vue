@@ -24,13 +24,46 @@ export default {
     Logbox,
   },
 
-  data: () => ({}),
+  data: () => ({
+    intervalID: null,
+  }),
 
-  methods: {},
+  methods: {
+    lowerHP: function () {
+      let hp = this.$store.state.user.HP
+      hp = Math.max(0, hp - 1)
+      this.$store.commit('user/setHP', hp)
+    },
+
+    writeLog: function () {
+      let log = this.$store.state.user.log
+      this.$store.state.tasks.tasks.forEach((element) => {
+        log =
+          element.title +
+          'の攻撃！' +
+          this.$store.state.user.name +
+          'は' +
+          1 +
+          'のダメージを受けた！\n' +
+          log
+      })
+      this.$store.commit('user/setLog', log)
+    },
+
+    secondFunc: function () {
+      this.lowerHP()
+      this.writeLog()
+    },
+  },
 
   created() {
     this.$store.dispatch('tasks/setTasks')
     this.$store.dispatch('user/getHP')
+    this.intervalID = setInterval(this.secondFunc, 1000)
+  },
+
+  destroyed() {
+    clearInterval(this.intervalID)
   },
 }
 </script>
