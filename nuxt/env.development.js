@@ -1,4 +1,5 @@
-const URL_BASE = 'http://localhost:8088'
+// const URL_BASE = 'http://localhost:8088'
+const URL_BASE = 'http://192.168.3.11:8088'
 
 module.exports = {
   URL_BASE: URL_BASE,
