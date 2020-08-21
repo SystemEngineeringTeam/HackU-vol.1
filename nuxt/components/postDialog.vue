@@ -80,7 +80,7 @@ export default {
 
   data: () => ({
     postDialogBool: false,
-    required: (value) => !!value || 'plese input title',
+    required: (value) => !!value || 'please input title',
   }),
 
   methods: {
