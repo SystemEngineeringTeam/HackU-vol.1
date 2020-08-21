@@ -31,7 +31,7 @@ export default {
   methods: {
     lowerHP: function () {
       let hp = this.$store.state.user.HP
-      hp = Math.max(0, hp - 1)
+      hp = Math.max(0, hp - this.$store.state.tasks.tasks.length)
       this.$store.commit('user/setHP', hp)
     },
 

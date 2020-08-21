@@ -37,7 +37,7 @@ export default {
   },
 
   created() {
-    this.$store.commit('user/setHP', 100)
+    // this.$store.commit('user/setHP', 100)
     //this.$store.commit('user/setMaxHP', 100)
   },
 }
