@@ -120,7 +120,6 @@ func calculateCurrentHp(tasksID []int, pastHp int) int {
 	fmt.Println(t.Day())
 	fmt.Println(t.Hour())
 	fmt.Println(t.Minute())
-	fmt.Println(t.Second())
 	fmt.Println(t.Weekday()) */
 
 	numTask := len(tasksID)
