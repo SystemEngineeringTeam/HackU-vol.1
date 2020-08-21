@@ -37,7 +37,9 @@ func CallTasks(token string) ([]Task, error) {
 			return nil, err
 		}
 
-		tasks = append(tasks, t)
+		if t.ID != 0 {
+			tasks = append(tasks, t)
+		}
 	}
 
 	if len(tasks) == 0 {
