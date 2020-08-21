@@ -69,17 +69,23 @@ func RegisterNewUser(u User) error {
 	hashEmail := sha256.Sum256([]byte(u.Email))
 	token := hex.EncodeToString(hashEmail[:])
 
-	res, err := db.Exec("insert into hitpoints(hp) values (?)", maxHP)
+	res, err := db.Exec("insert into user_parameters(hp) values (?)", maxHP)
 	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
 		return err
 	}
 
 	hpID, err := res.LastInsertId()
 	if err != nil {
+		pc, file, line, _ := runtime.Caller(0)
+		f := runtime.FuncForPC(pc)
+		log.Printf(errFormat, err, f.Name(), file, line)
 		return err
 	}
 
-	_, err = db.Exec("insert into users(name,email,password,token,hp_id) values (?,?,?,?,?)", u.Name, u.Email, encodePass, token, hpID)
+	_, err = db.Exec("insert into users(name,email,password,token,param_id) values (?,?,?,?,?)", u.Name, u.Email, encodePass, token, hpID)
 	if err != nil {
 
 		pc, file, line, _ := runtime.Caller(0)
