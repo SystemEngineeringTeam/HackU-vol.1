@@ -29,9 +29,16 @@ export default {
   //props: [],
 
   data: () => ({
+    lowerHPid: null,
   }),
 
-  methods: {},
+  methods: {
+    lowerHP: function () {
+      let hp = this.$store.state.user.HP
+      hp -= 1
+      this.$store.commit('user/setHP', hp)
+    },
+  },
 
   computed: {
     getHP() {
@@ -39,8 +46,13 @@ export default {
     },
   },
 
-  created(){
-      
+  created() {
+    this.$store.commit('user/setHP', 100)
+    this.lowerHPid = setInterval(this.lowerHP, 1000)
+  },
+
+  destroyed() {
+    clearInterval(this.lowerHPid)
   },
 }
 </script>
