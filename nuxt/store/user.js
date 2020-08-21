@@ -5,6 +5,7 @@ export const state = () => ({
   name: '',
   HP: 100,
   maxHP: 100,
+  log: ''
 })
 
 export const mutations = {
@@ -23,6 +24,10 @@ export const mutations = {
   setMaxHP(state, maxHP) {
     state.maxHP = maxHP
   },
+
+  setLog(state, log){
+    state.log = log
+  }
 }
 
 export const actions = {
@@ -67,5 +72,6 @@ export const actions = {
     commit('setToken', '')
     commit('setName', '')
     commit('setHP', state.maxHP)
+    commit('setLog', '')
   },
 }

@@ -26,19 +26,9 @@
 export default {
   name: 'HPGauge',
 
-  //props: [],
+  data: () => ({}),
 
-  data: () => ({
-    lowerHPid: null,
-  }),
-
-  methods: {
-    lowerHP: function () {
-      let hp = this.$store.state.user.HP
-      hp = Math.max(0, hp - this.$store.state.tasks.tasks.length)
-      this.$store.commit('user/setHP', hp)
-    },
-  },
+  methods: {},
 
   computed: {
     getHP() {
@@ -49,11 +39,6 @@ export default {
   created() {
     this.$store.commit('user/setHP', 100)
     //this.$store.commit('user/setMaxHP', 100)
-    this.lowerHPid = setInterval(this.lowerHP, 1000)
-  },
-
-  destroyed() {
-    clearInterval(this.lowerHPid)
   },
 }
 </script>
