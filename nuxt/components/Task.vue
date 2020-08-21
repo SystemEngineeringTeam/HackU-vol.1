@@ -32,6 +32,8 @@ export default {
   methods: {
     success: function () {
       this.$store.dispatch('tasks/successTask', this.task.id)
+      let log = this.$store.state.user.log + this.task.title + 'を倒した！\n'
+      this.$store.commit('user/setLog', log)
     },
   },
 
