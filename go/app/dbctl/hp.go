@@ -24,31 +24,31 @@ func CallHpFromUserToken(token string) (Hp, error) {
 	//Next が呼び出されて false が返され，それ以上結果セットがない場合， rows は自動的に閉じられる
 	defer rows.Close()
 
-	var temporaryID int
+	var temporaryUserID int
 
 	for rows.Next() {
-		temporaryID = 0
-		rows.Scan(&temporaryID)
+		temporaryUserID = 0
+		rows.Scan(&temporaryUserID)
 	}
 
 	//user_parametersのidからuser_parametersテーブルのhpを取得
-	row, err := db.Query("select hp from user_parameters where id=?", temporaryID)
+	rows, err = db.Query("select hp from user_parameters where id=?", temporaryUserID)
 
 	if err != nil {
 		return Hp{}, err
 	}
 
-	defer row.Close()
+	defer rows.Close()
 
 	//明示的な型宣言
 	var pastHp int
 
-	for row.Next() {
+	for rows.Next() {
 		pastHp = 0
-		row.Scan(&pastHp)
+		rows.Scan(&pastHp)
 	}
 
-	tasksID, err := callTasksIDFromUserToken(token)
+	tasksID, err := callTaskIDsFromUserToken(token)
 
 	if err != nil {
 		return Hp{}, err
@@ -57,13 +57,13 @@ func CallHpFromUserToken(token string) (Hp, error) {
 	currentHp := calculateCurrentHp(tasksID, pastHp)
 
 	//データベースの更新
-	_, err = db.Exec("update user_parameters set hp=? where id=?", currentHp, temporaryID)
+	_, err = db.Exec("update user_parameters set hp=? where id=?", currentHp, temporaryUserID)
 
 	if err != nil {
 		pc, file, line, _ := runtime.Caller(0)
 		f := runtime.FuncForPC(pc)
 		log.Printf(errFormat, err, f.Name(), file, line)
-		return Hp{},err
+		return Hp{}, err
 	}
 
 	//構造体の初期化
@@ -74,7 +74,7 @@ func CallHpFromUserToken(token string) (Hp, error) {
 	return hp, nil
 }
 
-func callTasksIDFromUserToken(token string) ([]int, error) {
+func callTaskIDsFromUserToken(token string) ([]int, error) {
 
 	//usersのidを取得
 	rows, err := db.Query("select id from users where token=?", token)

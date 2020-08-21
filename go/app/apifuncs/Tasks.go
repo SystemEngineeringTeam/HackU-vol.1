@@ -50,7 +50,7 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 		}
 
 		jsonString := string(jsonBytes)
-
+		
 		// httpステータスコードを返す<-New
 		w.WriteHeader(http.StatusOK)
 		r.Header.Set("Content-Type", "application/json")
@@ -136,8 +136,7 @@ func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusServiceUnavailable)
 			fmt.Println("database error", err)
 			return
-		}
-
+		}					
 	}
 
 	w.WriteHeader(http.StatusOK)

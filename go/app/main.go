@@ -13,6 +13,7 @@ func main() {
 	http.HandleFunc("/users/login", apifuncs.UsersLogin)
 	http.HandleFunc("/users/signup", apifuncs.UsersSignUp)
 	http.HandleFunc("/tasks/weights", apifuncs.TaskDifficulty)
+	http.HandleFunc("/hp",apifuncs.HpResponse)
 
 	http.HandleFunc("/test/database", apifuncs.DBTest)
 
