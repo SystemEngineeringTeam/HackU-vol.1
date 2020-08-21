@@ -29,6 +29,7 @@
                 <v-text-field
                   label="title"
                   v-model="title"
+                  :rules="[required]"
                   required
                 ></v-text-field>
               </v-col>
@@ -79,6 +80,7 @@ export default {
 
   data: () => ({
     postDialogBool: false,
+    required: (value) => !!value || 'plese input title',
   }),
 
   methods: {
@@ -87,6 +89,9 @@ export default {
       this.$store.dispatch('tasks/postAllReset')
     },
     doPost() {
+      if (this.title === '') {
+        return
+      }
       this.postDialogBool = false
       this.$store.dispatch('tasks/postTask')
     },
