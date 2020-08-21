@@ -193,4 +193,8 @@ export const actions = {
       }
     })
   },
+
+  logout({ commit }) {
+    commit('setTasks', [])
+  },
 }
