@@ -27,13 +27,13 @@ export default {
     writeLog: function () {
       this.tasks.forEach((element) => {
         this.log =
-          this.log +
           element.title +
           'の攻撃！' +
           this.userName +
           'は' +
           1 +
-          'のダメージを受けた！\n'
+          'のダメージを受けた！\n' +
+          this.log
       })
     },
   },
