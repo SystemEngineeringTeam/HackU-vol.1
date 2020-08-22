@@ -34,8 +34,9 @@ export const actions = {
       .then((res) => {
         if (res.status === 200) {
           console.log(235)
-          commit('setHP', res.data.HP)
-          commit('setMaxHP', res.data.maxHP)
+          // commit('setHP', 750000)
+          commit('setHP', res.data.hp)
+          commit('setMaxHP', res.data.maxHp)
         }
       })
   },
