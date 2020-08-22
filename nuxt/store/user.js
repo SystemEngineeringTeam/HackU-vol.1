@@ -39,7 +39,7 @@ export const actions = {
       })
   },
 
-  logout({ state, commit }) {
+  logout({ commit }) {
     commit('setToken', '')
     commit('setName', '')
   },

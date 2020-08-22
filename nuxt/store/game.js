@@ -35,6 +35,33 @@ export const actions = {
       })
   },
 
+  lowerHP({ state, rootState, commit }) {
+    let hp = state.HP
+    const damage = rootState.tasks.tasks.length
+    hp = Math.max(0, hp - damage)
+    commit('setHP', hp)
+  },
+
+  writeDamageLog({ state, rootState, commit }) {
+    let log = state.log
+    rootState.tasks.tasks.forEach((element) => {
+      log =
+        element.title +
+        'の攻撃！' +
+        rootState.user.name +
+        'は' +
+        1 +
+        'のダメージを受けた！\n' +
+        log
+    })
+    commit('setLog', log)
+  },
+
+  writeSuccessLog({ state, commit }, title) {
+    let log = title + 'を倒した！\n' + state.log
+    commit('setLog', log)
+  },
+
   logout({ state, commit }) {
     commit('setHP', state.maxHP)
     commit('setLog', '')

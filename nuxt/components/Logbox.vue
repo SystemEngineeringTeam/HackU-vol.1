@@ -21,9 +21,5 @@ export default {
   data: () => ({}),
 
   methods: {},
-
-  created() {
-    this.$store.commit('game/setLog', '')
-  },
 }
 </script>
