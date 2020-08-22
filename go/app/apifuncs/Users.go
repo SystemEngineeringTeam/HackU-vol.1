@@ -21,7 +21,7 @@ func UsersLogin(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
-		log.Println("io error")
+		log.Println("io error")		
 		return
 	}
 
@@ -46,7 +46,7 @@ func UsersLogin(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	r.Header.Set("Content-Type", "application/json")
-
+	
 	//クライアントに渡す
 	fmt.Fprintf(w, jsonString)
 }
@@ -75,13 +75,13 @@ func UsersSignUp(w http.ResponseWriter, r *http.Request) {
 	if err := json.Unmarshal(jsonBytes, &data); err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
 		fmt.Println("JSON Unmarshal error:", err)
-		return
+		return		
 	}
 
 	//ユーザ登録を行う
 
 	if err := dbctl.RegisterNewUser(data); err != nil {
-		w.WriteHeader(http.StatusServiceUnavailable)
+		w.WriteHeader(http.StatusServiceUnavailable)		
 		log.Println("database error")
 		return
 	}
