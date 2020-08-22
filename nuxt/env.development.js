@@ -1,5 +1,8 @@
 const URL_BASE = 'http://localhost:8088'
 
+// これを自分のPCのIPアドレスに書き換えると自分のパソコンで立ち上げたGoに繋がるようになるよ
+// const URL_BASE = 'http://{自分のipアドレス}:8088'
+
 module.exports = {
   URL_BASE: URL_BASE,
   URL_TASKS: URL_BASE + '/tasks',
