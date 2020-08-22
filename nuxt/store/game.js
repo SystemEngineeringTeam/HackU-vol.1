@@ -21,6 +21,11 @@ export const mutations = {
 }
 
 export const actions = {
+  gameInit({ commit, dispatch }) {
+    dispatch('getHP')
+    commit('setLog', '')
+  },
+
   async getHP({ state, commit }) {
     await axios
       .get(process.env.URL_HP, {

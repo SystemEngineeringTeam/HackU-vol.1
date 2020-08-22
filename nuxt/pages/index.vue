@@ -37,8 +37,7 @@ export default {
 
   created() {
     this.$store.dispatch('tasks/setTasks')
-    this.$store.dispatch('game/getHP')
-    this.$store.commit('game/setLog', '')
+    this.$store.dispatch('game/gameInit')
     this.intervalID = setInterval(this.secondFunc, 1000)
   },
 
