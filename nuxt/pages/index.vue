@@ -29,37 +29,15 @@ export default {
   }),
 
   methods: {
-    lowerHP: function () {
-      let hp = this.$store.state.user.HP
-      const damage = this.$store.state.tasks.tasks.length
-      hp = Math.max(0, hp - damage)
-      this.$store.commit('user/setHP', hp)
-    },
-
-    writeLog: function () {
-      let log = this.$store.state.user.log
-      this.$store.state.tasks.tasks.forEach((element) => {
-        log =
-          element.title +
-          'の攻撃！' +
-          this.$store.state.user.name +
-          'は' +
-          1 +
-          'のダメージを受けた！\n' +
-          log
-      })
-      this.$store.commit('user/setLog', log)
-    },
-
     secondFunc: function () {
-      this.lowerHP()
-      this.writeLog()
+      this.$store.dispatch('game/lowerHP')
+      this.$store.dispatch('game/writeDamageLog')
     },
   },
 
   created() {
     this.$store.dispatch('tasks/setTasks')
-    this.$store.dispatch('user/getHP')
+    this.$store.dispatch('game/gameInit')
     this.intervalID = setInterval(this.secondFunc, 1000)
   },
 
