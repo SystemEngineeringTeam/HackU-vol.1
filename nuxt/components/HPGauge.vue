@@ -36,9 +36,9 @@ export default {
     },
   },
 
-  created() {
-    this.$store.commit('game/setHP', 100)
-    //this.$store.commit('game/setMaxHP', 100)
-  },
+  // created() {
+  //   this.$store.commit('game/setHP', 100)
+  //   //this.$store.commit('game/setMaxHP', 100)
+  // },
 }
 </script>
