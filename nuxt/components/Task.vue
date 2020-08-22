@@ -33,7 +33,7 @@ export default {
     success: function () {
       this.$store.dispatch('tasks/successTask', this.task.id)
       let log = this.task.title + 'を倒した！\n' + this.$store.state.user.log
-      this.$store.commit('user/setLog', log)
+      this.$store.commit('game/setLog', log)
     },
   },
 

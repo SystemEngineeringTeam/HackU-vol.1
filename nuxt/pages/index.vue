@@ -30,14 +30,14 @@ export default {
 
   methods: {
     lowerHP: function () {
-      let hp = this.$store.state.user.HP
+      let hp = this.$store.state.game.HP
       const damage = this.$store.state.tasks.tasks.length
       hp = Math.max(0, hp - damage)
-      this.$store.commit('user/setHP', hp)
+      this.$store.commit('game/setHP', hp)
     },
 
     writeLog: function () {
-      let log = this.$store.state.user.log
+      let log = this.$store.state.game.log
       this.$store.state.tasks.tasks.forEach((element) => {
         log =
           element.title +
@@ -48,7 +48,7 @@ export default {
           'のダメージを受けた！\n' +
           log
       })
-      this.$store.commit('user/setLog', log)
+      this.$store.commit('game/setLog', log)
     },
 
     secondFunc: function () {
@@ -59,7 +59,7 @@ export default {
 
   created() {
     this.$store.dispatch('tasks/setTasks')
-    this.$store.dispatch('user/getHP')
+    this.$store.dispatch('game/getHP')
     this.intervalID = setInterval(this.secondFunc, 1000)
   },
 

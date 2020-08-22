@@ -18,7 +18,7 @@
       color="green"
       :value="getHP"
     ></v-progress-linear>
-    {{ this.$store.state.user.HP }}/{{ this.$store.state.user.maxHP }}
+    {{ this.$store.state.game.HP }}/{{ this.$store.state.game.maxHP }}
   </div>
 </template>
 
@@ -32,13 +32,13 @@ export default {
 
   computed: {
     getHP() {
-      return (this.$store.state.user.HP / this.$store.state.user.maxHP) * 100
+      return (this.$store.state.game.HP / this.$store.state.game.maxHP) * 100
     },
   },
 
   created() {
-    this.$store.commit('user/setHP', 100)
-    //this.$store.commit('user/setMaxHP', 100)
+    this.$store.commit('game/setHP', 100)
+    //this.$store.commit('game/setMaxHP', 100)
   },
 }
 </script>
