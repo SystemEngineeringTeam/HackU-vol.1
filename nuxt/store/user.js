@@ -3,8 +3,8 @@ import axios from 'axios'
 export const state = () => ({
   token: '',
   name: '',
-  HP: 100,
-  maxHP: 100,
+  HP: 750000,
+  maxHP: 1000000,
   log: ''
 })
 
