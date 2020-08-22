@@ -19,7 +19,7 @@ type Task struct {
 
 // CallTasks はタスク一覧を返す関数
 func CallTasks(token string) ([]Task, error) {
-	userID, err := callUserIDFromToken(token)
+	userID, err := callUserIDFromToken(token)	
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func callTaskIDsFromUserID(userID int) ([]int, error) {
 	for rows.Next() {
 		temporaryID := 0
 		rows.Scan(&temporaryID)
-		taskIDs = append(taskIDs, temporaryID)
+		taskIDs = append(taskIDs, temporaryID)		
 	}
 
 	return taskIDs, nil

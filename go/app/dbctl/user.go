@@ -97,3 +97,5 @@ func RegisterNewUser(u User) error {
 
 	return nil
 }
+
+
