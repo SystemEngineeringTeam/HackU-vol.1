@@ -3,7 +3,7 @@
     <v-card-title class="justify-center">
       ステータス情報
     </v-card-title>
-    <v-textarea solo readonly v-model="log"></v-textarea>
+    <v-textarea solo readonly v-model="$store.state.game.log"></v-textarea>
     <HPGauge />
   </v-card>
 </template>
@@ -18,14 +18,8 @@ export default {
     HPGauge,
   },
 
-  //props: [],
-
-  data: () => ({
-    log: 'log',
-  }),
+  data: () => ({}),
 
   methods: {},
-
-  computed: {},
 }
 </script>

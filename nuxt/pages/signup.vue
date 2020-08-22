@@ -60,7 +60,7 @@ export default {
         email: this.email,
         pass: this.pass,
       }
-      this.$store.dispatch("user/signup", post_json)
+      this.$store.dispatch('user/signup', post_json)
     },
   },
 }

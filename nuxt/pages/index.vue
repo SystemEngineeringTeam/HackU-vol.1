@@ -24,13 +24,25 @@ export default {
     Logbox,
   },
 
-  data: () => ({}),
+  data: () => ({
+    intervalID: null,
+  }),
 
-  methods: {},
+  methods: {
+    secondFunc: function () {
+      this.$store.dispatch('game/lowerHP')
+      this.$store.dispatch('game/writeDamageLog')
+    },
+  },
 
   created() {
     this.$store.dispatch('tasks/setTasks')
-    this.$store.dispatch('user/getHP')
+    this.$store.dispatch('game/gameInit')
+    this.intervalID = setInterval(this.secondFunc, 1000)
+  },
+
+  destroyed() {
+    clearInterval(this.intervalID)
   },
 }
 </script>

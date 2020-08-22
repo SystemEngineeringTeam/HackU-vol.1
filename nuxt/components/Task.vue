@@ -32,6 +32,7 @@ export default {
   methods: {
     success: function () {
       this.$store.dispatch('tasks/successTask', this.task.id)
+      this.$store.dispatch('game/writeSuccessLog', this.task.title)
     },
   },
 
