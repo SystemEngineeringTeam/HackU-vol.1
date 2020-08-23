@@ -4,6 +4,19 @@ export const state = () => ({
   HP: 750000,
   maxHP: 1000000,
   log: '',
+
+  logVariation: [
+    'は火を吐いた！ファイアー！',
+    'の毒ガス攻撃！',
+    'の迫真の攻撃！',
+    'は顔からビームを発射した！',
+    'のグーパン！',
+    'は叫んで超音波を出した！ギョエェェェエ！！',
+    'は冷凍ビームを発射！',
+    'はじゃんけんを強要してきた！負けた！',
+    'は石を投げつけてきた！',
+    'の精神的圧力！仕事をしろ！'
+  ],
 })
 
 export const mutations = {
@@ -51,9 +64,11 @@ export const actions = {
   writeDamageLog({ state, rootState, commit }) {
     let log = state.log
     rootState.tasks.tasks.forEach((element) => {
+      let logIndex = Math.random(state.logVariation.length)*state.logVariation.length
+      logIndex = Math.floor(logIndex)
       log =
         element.title +
-        'の攻撃！' +
+        state.logVariation[logIndex] +
         rootState.user.name +
         'は' +
         1 +
