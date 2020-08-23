@@ -64,7 +64,7 @@ export const actions = {
   writeDamageLog({ state, rootState, commit }) {
     let log = state.log
     rootState.tasks.tasks.forEach((element) => {
-      let logIndex = Math.random(state.logVariation.length)*state.logVariation.length
+      let logIndex = Math.random()*state.logVariation.length
       logIndex = Math.floor(logIndex)
       log =
         element.title +
