@@ -19,7 +19,7 @@
 import Task from '../components/Task'
 import postDialog from '../components/postDialog'
 import Logbox from '../components/Logbox'
-import MonsterView from '../components/MonsterView'
+import MonsterView from '../components/Monster/MonsterView'
 
 export default {
   components: {
