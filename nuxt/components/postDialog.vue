@@ -34,27 +34,47 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
-                <DeadlinePicker />
-              </v-col>
-              <v-col cols="12">
-                <v-textarea
-                  outlined
-                  auto-grow
-                  v-model="description"
-                  label="description"
+                <v-btn
+                  v-if="!detailPicker"
+                  @click="detailPicker = true"
+                  block
+                  text
+                  color="primary"
+                  >詳細設定</v-btn
                 >
-                </v-textarea>
+                <v-btn
+                  v-if="detailPicker"
+                  @click="detailPicker = false"
+                  block
+                  text
+                  color="primary"
+                  >詳細設定を閉じる</v-btn
+                >
               </v-col>
-              <v-col cols="4">
-                <v-select
-                  v-model="weight"
-                  :items="$store.state.tasks.weights"
-                  :menu-props="{ maxHeight: '400' }"
-                  label="Select"
-                  hint="tasks weight"
-                  persistent-hint
-                ></v-select>
-              </v-col>
+              <div v-if="detailPicker">
+                <v-col cols="12">
+                  <DeadlinePicker />
+                </v-col>
+                <v-col cols="12">
+                  <v-textarea
+                    outlined
+                    auto-grow
+                    v-model="description"
+                    label="description"
+                  >
+                  </v-textarea>
+                </v-col>
+                <v-col cols="4">
+                  <v-select
+                    v-model="weight"
+                    :items="$store.state.tasks.weights"
+                    :menu-props="{ maxHeight: '400' }"
+                    label="Select"
+                    hint="tasks weight"
+                    persistent-hint
+                  ></v-select>
+                </v-col>
+              </div>
             </v-row>
           </v-container>
         </v-card-text>
@@ -81,6 +101,7 @@ export default {
   data: () => ({
     postDialogBool: false,
     required: (value) => !!value || 'please input title',
+    detailPicker: false,
   }),
 
   methods: {
