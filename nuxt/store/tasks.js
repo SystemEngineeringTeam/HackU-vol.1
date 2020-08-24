@@ -158,6 +158,7 @@ export const actions = {
             weight: post_json.weight,
           }
           commit('addTask', new_task)
+          commit('game/addTask', null, { root: true })
           dispatch('postAllReset')
         }
       })
@@ -182,6 +183,7 @@ export const actions = {
         if (res.status === 200) {
           let index = state.tasks.findIndex((element) => element.id === taskID)
           commit('removeTask', index)
+          commit('game/removeTask', index, { root: true })
         }
       })
   },
