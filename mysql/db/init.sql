@@ -56,9 +56,9 @@ values
     (3,"えぐい");
 
 insert into
-    user_parameters(hp)
+    user_parameters(hp,updated_datetime)
 values
-    (1000000);
+    (1000000,Now());
 
 insert into
     users(id,name,email,password,token,param_id)
