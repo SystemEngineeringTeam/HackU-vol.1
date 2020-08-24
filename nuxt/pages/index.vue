@@ -35,7 +35,6 @@ export default {
 
   methods: {
     secondFunc: function () {
-      this.$store.dispatch('game/lowerHP')
       this.$store.dispatch('game/writeDamageLog')
     },
   },

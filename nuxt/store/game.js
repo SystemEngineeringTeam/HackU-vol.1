@@ -4,6 +4,18 @@ export const state = () => ({
   HP: 750000,
   maxHP: 1000000,
   log: '',
+  logVariation: [
+    'は火を吐いた！ファイアー！',
+    'の毒ガス攻撃！',
+    'の迫真の攻撃！',
+    'は顔からビームを発射した！',
+    'のグーパン！',
+    'は叫んで超音波を出した！ギョエェェェエ！！',
+    'は冷凍ビームを発射！',
+    'はじゃんけんを強要してきた！負けた！',
+    'は石を投げつけてきた！',
+    'の精神的圧力！仕事をしろ！',
+  ],
   logCount: [],
 })
 
@@ -53,17 +65,16 @@ export const actions = {
       })
       .then((res) => {
         if (res.status === 200) {
-          console.log(235)
-          // commit('setHP', 750000)
+          //commit('setHP', state.maxHP)
           commit('setHP', res.data.hp)
           commit('setMaxHP', res.data.maxHp)
         }
       })
   },
 
-  lowerHP({ state, rootState, commit }) {
+  lowerHP({ state, commit }, amountReduceHP) {
     let hp = state.HP
-    const damage = rootState.tasks.tasks.length
+    const damage = amountReduceHP
     hp = Math.max(0, hp - damage)
     commit('setHP', hp)
   },
@@ -76,20 +87,23 @@ export const actions = {
     }
   },
 
-  writeDamageLog({ state, rootState, commit }) {
+  writeDamageLog({ state, rootState, commit, dispatch }) {
     let log = state.log
     let logCount = state.logCount
     rootState.tasks.tasks.forEach((element, index) => {
       let attackRnd = Math.random()
       if (attackRnd <= 0.3) {
+        let logIndex = Math.random() * state.logVariation.length
+        logIndex = Math.floor(logIndex)
         log =
           element.title +
-          'の攻撃！' +
+          state.logVariation[logIndex] +
           rootState.user.name +
           'は' +
           1 * logCount[index] +
           'のダメージを受けた！\n' +
           log
+        dispatch('lowerHP', logCount[index] * 1)
         logCount[index] = 1
       } else {
         logCount[index] += 1
