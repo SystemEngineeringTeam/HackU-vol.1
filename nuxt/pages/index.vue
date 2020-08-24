@@ -1,6 +1,9 @@
 <template>
   <v-row class="text-center">
     <v-col cols="12">
+      <MonsterView/>
+    </v-col>
+    <v-col cols="12">
       <Logbox />
     </v-col>
     <v-col cols="12" v-for="(task, i) in $store.state.tasks.tasks" :key="i">
@@ -16,12 +19,14 @@
 import Task from '../components/Task'
 import postDialog from '../components/postDialog'
 import Logbox from '../components/Logbox'
+import MonsterView from '../components/MonsterView'
 
 export default {
   components: {
     Task,
     postDialog,
     Logbox,
+    MonsterView
   },
 
   data: () => ({
