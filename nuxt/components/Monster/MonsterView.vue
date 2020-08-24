@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col cols="2" v-for="(task, i) in tasks" :key="i">
-      <Monster :task_title="task.title" />
+      <Monster :task="task" />
     </v-col>
   </v-row>
 </template>
