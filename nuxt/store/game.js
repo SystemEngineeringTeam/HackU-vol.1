@@ -4,7 +4,6 @@ export const state = () => ({
   HP: 750000,
   maxHP: 1000000,
   log: '',
-
   logVariation: [
     'は火を吐いた！ファイアー！',
     'の毒ガス攻撃！',
@@ -17,6 +16,7 @@ export const state = () => ({
     'は石を投げつけてきた！',
     'の精神的圧力！仕事をしろ！'
   ],
+  logCount: [],
 })
 
 export const mutations = {
@@ -31,12 +31,31 @@ export const mutations = {
   setLog(state, log) {
     state.log = log
   },
+
+  setLogCount(state, logCount) {
+    state.logCount = logCount
+  },
+
+  addTask(state) {
+    state.logCount.push(1)
+  },
+
+  removeTask(state, index) {
+    state.logCount.splice(index, 1)
+  },
 }
 
 export const actions = {
   gameInit({ commit, dispatch }) {
     dispatch('getHP')
     commit('setLog', '')
+    dispatch('logCountInit')
+  },
+
+  logCountInit({ rootState, commit }) {
+    let logCount = []
+    rootState.tasks.tasks.forEach(() => logCount.push(1))
+    commit('setLogCount', logCount)
   },
 
   async getHP({ state, commit }) {
@@ -46,35 +65,50 @@ export const actions = {
       })
       .then((res) => {
         if (res.status === 200) {
-          console.log(235)
-          // commit('setHP', 750000)
+          //commit('setHP', state.maxHP)
           commit('setHP', res.data.hp)
           commit('setMaxHP', res.data.maxHp)
         }
       })
   },
 
-  lowerHP({ state, rootState, commit }) {
+  lowerHP({ state, commit }, amountReduceHP) {
     let hp = state.HP
-    const damage = rootState.tasks.tasks.length
+    const damage = amountReduceHP
     hp = Math.max(0, hp - damage)
     commit('setHP', hp)
   },
 
+  recoveryHP({ state, rootState, commit }) {
+    if (rootState.tasks.tasks.length === 1) {
+      commit('setHP', state.maxHP)
+    } else {
+      commit('setHP', Math.min(state.HP + 200000, state.maxHP))
+    }
+  },
+
   writeDamageLog({ state, rootState, commit }) {
-    let log = state.log
-    rootState.tasks.tasks.forEach((element) => {
-      let logIndex = Math.random()*state.logVariation.length
-      logIndex = Math.floor(logIndex)
-      log =
-        element.title +
-        state.logVariation[logIndex] +
-        rootState.user.name +
-        'は' +
-        1 +
-        'のダメージを受けた！\n' +
-        log
+    let logCount = state.logCount
+    rootState.tasks.tasks.forEach((element, index) => {
+      let attackRnd = Math.random()
+      if (attackRnd <= 0.3) {
+        let logIndex = Math.random()*state.logVariation.length
+        logIndex = Math.floor(logIndex)
+        log =
+          element.title +
+          state.logVariation[logIndex] +
+          rootState.user.name +
+          'は' +
+          1 * logCount[index] +
+          'のダメージを受けた！\n' +
+          log
+        dispatch('lowerHP', logCount[index] * 1)
+        logCount[index] = 1
+      } else {
+        logCount[index] += 1
+      }
     })
+    commit('setLogCount', logCount)
     commit('setLog', log)
   },
 
