@@ -17,6 +17,7 @@ export const state = () => ({
     'の精神的圧力！仕事をしろ！',
   ],
   logCount: [],
+  dieFlag: false,
 })
 
 export const mutations = {
@@ -43,6 +44,10 @@ export const mutations = {
   removeTask(state, index) {
     state.logCount.splice(index, 1)
   },
+
+  setDieFlag(state, dieFlag) {
+    state.dieFlag = dieFlag
+  },
 }
 
 export const actions = {
@@ -58,16 +63,25 @@ export const actions = {
     commit('setLogCount', logCount)
   },
 
-  async getHP({ state, commit }) {
+  dieFlagInit({ state, commit }) {
+    if (state.HP === 0) {
+      commit('setDieFlag', true)
+    } else {
+      commit('setDieFlag', false)
+    }
+  },
+
+  async getHP({ state, commit, dispatch }) {
     await axios
       .get(process.env.URL_HP, {
         params: { userToken: state.token },
       })
       .then((res) => {
         if (res.status === 200) {
-          //commit('setHP', state.maxHP)
           commit('setHP', res.data.hp)
+          //commit('setHP', state.maxHP)
           commit('setMaxHP', res.data.maxHp)
+          dispatch('dieFlagInit')
         }
       })
   },
@@ -77,6 +91,9 @@ export const actions = {
     const damage = amountReduceHP
     hp = Math.max(0, hp - damage)
     commit('setHP', hp)
+    if (hp === 0) {
+      commit('setDieFlag', true)
+    }
   },
 
   recoveryHP({ state, rootState, commit }) {
@@ -85,9 +102,13 @@ export const actions = {
     } else {
       commit('setHP', Math.min(state.HP + 200000, state.maxHP))
     }
+    commit('setDieFlag', false)
   },
 
   writeDamageLog({ state, rootState, commit, dispatch }) {
+    if (state.dieFlag) {
+      return
+    }
     let log = state.log
     let logCount = state.logCount
     rootState.tasks.tasks.forEach((element, index) => {
@@ -103,13 +124,16 @@ export const actions = {
           1 * logCount[index] +
           'のダメージを受けた！\n' +
           log
-        dispatch('lowerHP', logCount[index] * 1)
+        dispatch('lowerHP', logCount[index] * 100000)
         logCount[index] = 1
       } else {
         logCount[index] += 1
       }
     })
     commit('setLogCount', logCount)
+    if (state.dieFlag) {
+      log = rootState.user.name + 'は死んでしまった！\n' + log
+    }
     commit('setLog', log)
   },
 
