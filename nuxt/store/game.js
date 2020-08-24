@@ -48,6 +48,14 @@ export const actions = {
     commit('setHP', hp)
   },
 
+  recoveryHP({ state, rootState, commit }) {
+    if (rootState.tasks.tasks.length === 1) {
+      commit('setHP', state.maxHP)
+    } else {
+      commit('setHP', Math.min(state.HP + 200000, state.maxHP))
+    }
+  },
+
   writeDamageLog({ state, rootState, commit }) {
     let log = state.log
     rootState.tasks.tasks.forEach((element) => {
