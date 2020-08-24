@@ -53,17 +53,16 @@ export const actions = {
       })
       .then((res) => {
         if (res.status === 200) {
-          console.log(235)
-          // commit('setHP', 750000)
+          //commit('setHP', state.maxHP)
           commit('setHP', res.data.hp)
           commit('setMaxHP', res.data.maxHp)
         }
       })
   },
 
-  lowerHP({ state, rootState, commit }) {
+  lowerHP({ state, commit }, amountReduceHP) {
     let hp = state.HP
-    const damage = rootState.tasks.tasks.length
+    const damage = amountReduceHP
     hp = Math.max(0, hp - damage)
     commit('setHP', hp)
   },
@@ -90,6 +89,7 @@ export const actions = {
           1 * logCount[index] +
           'のダメージを受けた！\n' +
           log
+        dispatch('lowerHP', logCount[index] * 1)
         logCount[index] = 1
       } else {
         logCount[index] += 1
