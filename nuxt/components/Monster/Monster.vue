@@ -1,10 +1,10 @@
 <template>
-  <v-col >
-    <p>{{task_title}}</p>
-    <v-img
-      src="https://1.bp.blogspot.com/-DSgUUXrWoFw/XVKfz2Z_3XI/AAAAAAABUEs/a9QCrDh18-grpZCL0O_pD7r4KWC921gawCLcBGAs/s1600/fantasy_game_character_slime.png"
-      class="monster"
-    />
+  <v-col>
+    <p>{{ task.title }}</p>
+    <v-img v-if="!task.weight" :src="mimic" class="monster" />
+    <v-img v-else-if="task.weight === 'ぬるい'" :src="slime" class="monster" />
+    <v-img v-else-if="task.weight === 'ふつう'" :src="golem" class="monster" />
+    <v-img v-else-if="task.weight === 'えぐい'" :src="dragon" class="monster" />
   </v-col>
 </template>
 
@@ -30,9 +30,18 @@
 export default {
   name: 'Monster',
 
-  props: ['task_title'],
+  props: ['task'],
 
-  data: () => ({}),
+  data: () => ({
+    mimic:
+      'https://1.bp.blogspot.com/-_8wJqUxj-d4/W4PJlko8nmI/AAAAAAABOIc/Z-MzXgFr2OkbWRKja484G8tVn74a80h5QCLcBGAs/s800/character_game_mimic.png',
+    slime:
+      'https://1.bp.blogspot.com/-DSgUUXrWoFw/XVKfz2Z_3XI/AAAAAAABUEs/a9QCrDh18-grpZCL0O_pD7r4KWC921gawCLcBGAs/s1600/fantasy_game_character_slime.png',
+    golem:
+      'https://3.bp.blogspot.com/-ZWsv1eBwP-8/XDXcFKGXH2I/AAAAAAABRGs/bAVhn3sVs2wkaFSaeTzvwdAD3CuS47ZUACLcBGAs/s800/fantasy_golem.png',
+    dragon:
+      'https://4.bp.blogspot.com/-t0TdfnnfnH0/UT10GYML1QI/AAAAAAAAOrY/qNLEwXbzl-0/s1600/fantasy_dragon.png',
+  }),
 
   methods: {},
 
