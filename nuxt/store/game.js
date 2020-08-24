@@ -147,3 +147,9 @@ export const actions = {
     commit('setLog', '')
   },
 }
+
+export const getters = {
+  getHP: (state) => {
+    return (state.HP / state.maxHP) * 100
+  },
+}
