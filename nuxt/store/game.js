@@ -14,7 +14,7 @@ export const state = () => ({
     'は冷凍ビームを発射！',
     'はじゃんけんを強要してきた！負けた！',
     'は石を投げつけてきた！',
-    'の精神的圧力！仕事をしろ！'
+    'の精神的圧力！仕事をしろ！',
   ],
   logCount: [],
 })
@@ -87,12 +87,13 @@ export const actions = {
     }
   },
 
-  writeDamageLog({ state, rootState, commit }) {
+  writeDamageLog({ state, rootState, commit, dispatch }) {
+    let log = state.log
     let logCount = state.logCount
     rootState.tasks.tasks.forEach((element, index) => {
       let attackRnd = Math.random()
       if (attackRnd <= 0.3) {
-        let logIndex = Math.random()*state.logVariation.length
+        let logIndex = Math.random() * state.logVariation.length
         logIndex = Math.floor(logIndex)
         log =
           element.title +
