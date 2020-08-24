@@ -1,31 +1,30 @@
 <template>
-  <v-img
-    src="https://1.bp.blogspot.com/-DSgUUXrWoFw/XVKfz2Z_3XI/AAAAAAABUEs/a9QCrDh18-grpZCL0O_pD7r4KWC921gawCLcBGAs/s1600/fantasy_game_character_slime.png"
-    class="monster"
-    max-width="200"
-  />
+  <v-row>
+    <v-col cols="2" v-for="(task, i) in tasks" :key="i">
+      <Monster :task_title="task.title" />
+    </v-col>
+  </v-row>
 </template>
 
-<style scoped>
-@keyframes fuwafuwa {
-0% {transform:translate(0, 0) rotate(-5deg);}
-50% {transform:translate(0, -5px) rotate(0deg);}
-100% {transform:translate(0, 0)rotate(5deg);}
-}
-
-.monster {
-animation:fuwafuwa 1s linear infinite alternate;
-}
-</style>
-
 <script>
+import Monster from './Monster'
 export default {
+  components: {
+    Monster,
+  },
   name: 'MonsterView',
 
   data: () => ({}),
 
-  methods: {},
-
-  computed: {},
+  computed: {
+    // 6匹までモンスターを表示する用
+    tasks() {
+      if (this.$store.state.tasks.tasks.length <= 6) {
+        return this.$store.state.tasks.tasks
+      } else {
+        return this.$store.state.tasks.tasks.slice(0, 6)
+      }
+    },
+  },
 }
 </script>
