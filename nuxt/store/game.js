@@ -4,6 +4,7 @@ export const state = () => ({
   HP: 750000,
   maxHP: 1000000,
   log: '',
+  logCount: [],
 })
 
 export const mutations = {
@@ -18,12 +19,31 @@ export const mutations = {
   setLog(state, log) {
     state.log = log
   },
+
+  setLogCount(state, logCount) {
+    state.logCount = logCount
+  },
+
+  addTask(state) {
+    state.logCount.push(1)
+  },
+
+  removeTask(state, index) {
+    state.logCount.splice(index, 1)
+  },
 }
 
 export const actions = {
   gameInit({ commit, dispatch }) {
     dispatch('getHP')
     commit('setLog', '')
+    dispatch('logCountInit')
+  },
+
+  logCountInit({ rootState, commit }) {
+    let logCount = []
+    rootState.tasks.tasks.forEach(() => logCount.push(1))
+    commit('setLogCount', logCount)
   },
 
   async getHP({ state, commit }) {
@@ -48,18 +68,34 @@ export const actions = {
     commit('setHP', hp)
   },
 
+  recoveryHP({ state, rootState, commit }) {
+    if (rootState.tasks.tasks.length === 1) {
+      commit('setHP', state.maxHP)
+    } else {
+      commit('setHP', Math.min(state.HP + 200000, state.maxHP))
+    }
+  },
+
   writeDamageLog({ state, rootState, commit }) {
     let log = state.log
-    rootState.tasks.tasks.forEach((element) => {
-      log =
-        element.title +
-        'の攻撃！' +
-        rootState.user.name +
-        'は' +
-        1 +
-        'のダメージを受けた！\n' +
-        log
+    let logCount = state.logCount
+    rootState.tasks.tasks.forEach((element, index) => {
+      let attackRnd = Math.random()
+      if (attackRnd <= 0.3) {
+        log =
+          element.title +
+          'の攻撃！' +
+          rootState.user.name +
+          'は' +
+          1 * logCount[index] +
+          'のダメージを受けた！\n' +
+          log
+        logCount[index] = 1
+      } else {
+        logCount[index] += 1
+      }
     })
+    commit('setLogCount', logCount)
     commit('setLog', log)
   },
 

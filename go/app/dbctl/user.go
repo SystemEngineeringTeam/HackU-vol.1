@@ -69,7 +69,7 @@ func RegisterNewUser(u User) error {
 	hashEmail := sha256.Sum256([]byte(u.Email))
 	token := hex.EncodeToString(hashEmail[:])
 
-	res, err := db.Exec("insert into user_parameters(hp) values (?)", maxHP)
+	res, err := db.Exec("insert into user_parameters(hp,updated_datetime) values (?,Now())", maxHP)
 	if err != nil {
 		pc, file, line, _ := runtime.Caller(0)
 		f := runtime.FuncForPC(pc)
@@ -97,5 +97,3 @@ func RegisterNewUser(u User) error {
 
 	return nil
 }
-
-
