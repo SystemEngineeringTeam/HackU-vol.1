@@ -1,6 +1,7 @@
 package dbctl
 
 import (
+	"fmt"
 	"log"
 	"runtime"
 	"time"
@@ -52,6 +53,9 @@ func CallHpFromUserToken(token string) (Hp, error) {
 
 	//updateした日時を取得
 	rows, err = db.Query("select updated_datetime from user_parameters where id=?", temporaryUserID)
+	if err != nil {
+		return Hp{}, err
+	}
 	defer rows.Close()
 	var updateDate string
 	for rows.Next() {
@@ -125,12 +129,14 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 	var totalDamage int = 0
 	var err error
 	//現在の日付と時刻
+	jst, _ := time.LoadLocation("Asia/Tokyo")
 	nowTime := time.Now()
+
 	//現在の時刻を秒数に変換したもの
 	//dataSecond := (data.Hour() * 3600) + (data.Minute() * 60) + data.Second()
 
 	//フォーマットの整形time型の"2020-08-22 11:58:06 +0000 UTC"のような形式で表示される
-	thenUpdateDate, err := time.Parse(layout, updateDate)
+	thenUpdateDate, err := time.ParseInLocation(layout, updateDate, jst)
 	if err != nil {
 		return -1, err
 	}
@@ -145,11 +151,11 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 		}
 		defer rowsWeightIDs.Close()
 		//タスク一つの重さ
-		var WeightID int
+		var weightID int
 
 		for rowsWeightIDs.Next() {
-			WeightID = 0
-			rowsWeightIDs.Scan(&WeightID)
+			weightID = 0
+			rowsWeightIDs.Scan(&weightID)
 		}
 
 		//hpをアップデートした日(タスクを登録した時にもされる)と現在時刻の差
@@ -158,17 +164,28 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 		//float型をint型に変換したもの
 		var intDiffUpdateDate int = int(diffUpdateDate.Seconds())
 
-		totalDamage = totalDamage + intDiffUpdateDate*WeightID
+		fmt.Print("intDiffUpdate=")
+		fmt.Println(intDiffUpdateDate)
+
+		if weightID == 0 {
+			weightID = 1
+		}
+
+		totalDamage = totalDamage + intDiffUpdateDate*weightID
+
+		fmt.Println(weightID)
+
 	}
 
 	//time型をstring型に変換したもの"2020-08-24 22:46:04"のような形になる
-	stringUpdateNowTime := nowTime.Format(layout)
+	//stringUpdateNowTime := nowTime.Format(layout)
 	//データベースのupdate_datetimeを現在時刻に変更
-	_, err = db.Exec("update user_parameters set  updated_datetime=? where id=?", stringUpdateNowTime, temporaryUserID)
+	_, err = db.Exec("update user_parameters set updated_datetime=Now() where id=?", temporaryUserID)
 
 	currentHp := pastHp - totalDamage
+	fmt.Println(currentHp, pastHp, totalDamage)
 
-	return currentHp, err
+	return currentHp, nil
 
 }
 
@@ -195,15 +212,21 @@ func RecoveryHp(token string) {
 	defer rows.Close()
 	var pastHp int
 	for rows.Next() {
-		temporaryUserID = 0
+		pastHp = 0
 		rows.Scan(&pastHp)
 	}
 
 	recoveryAfterHp := pastHp + 200000
 
+	if recoveryAfterHp > 1000000 {
+		recoveryAfterHp = 1000000
+	}
+
 	//user_parametersの更新
 	_, err = db.Exec("update user_parameters set hp=? where id=?", recoveryAfterHp, temporaryUserID)
-
+	if err != nil {
+		return
+	}
 }
 
 //CountTaskIDUpdateTime はtaskIDの数を数えて時刻をアップデートする
@@ -230,12 +253,12 @@ func CountTaskIDUpdateTime(token string) error {
 
 	//タスクが0だったら
 	if len(taskIDs) == 0 {
-		nowTime := time.Now()
+		//nowTime := time.Now()
 		//time型をstring型に変換したもの"2020-08-24 22:46:04"のような形になる
-		stringUpdateNowTime := nowTime.Format(layout)
+		//stringUpdateNowTime := nowTime.Format(layout)
 		//updated_datetimeの更新
-		_, err = db.Exec("update user_parameters set  updated_datetime=? where id=?", stringUpdateNowTime, temporaryUserID)
+		_, err = db.Exec("update user_parameters set updated_datetime=Now() where id=?", temporaryUserID)
 	}
 
-	return err
+	return nil
 }
