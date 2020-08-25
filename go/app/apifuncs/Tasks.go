@@ -81,6 +81,14 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+
+		//taskが0の時現在時刻にUpdate
+		if err := dbctl.CountTaskIDUpdateTime(userToken); err!=nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			fmt.Println("database error",err)
+			return
+		}
+
 		//taskの登録
 		taskID, err := dbctl.RegisterNewTask(userToken, data)
 		if err != nil {
@@ -95,7 +103,6 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusServiceUnavailable)
 			fmt.Println("database error", err)
 			return
-
 		}
 
 		w.WriteHeader(http.StatusOK)
