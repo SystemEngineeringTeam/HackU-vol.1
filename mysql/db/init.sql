@@ -2,7 +2,8 @@ use production_db;
 
 create table user_parameters(
     id int auto_increment not null primary key,
-    hp int not null
+    hp int not null,
+    updated_datetime datetime not null
 );
 
 create table users(
@@ -55,9 +56,9 @@ values
     (3,"えぐい");
 
 insert into
-    user_parameters(hp)
+    user_parameters(hp,updated_datetime)
 values
-    (1000000);
+    (1000000,Now());
 
 insert into
     users(id,name,email,password,token,param_id)

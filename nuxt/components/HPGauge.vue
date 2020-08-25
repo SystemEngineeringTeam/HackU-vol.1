@@ -1,22 +1,22 @@
 <template>
   <div>
     <v-progress-linear
-      v-if="getHP <= 25"
+      v-if="$store.getters['game/getHP'] <= 25"
       height="25"
       color="red"
-      :value="getHP"
+      :value="$store.getters['game/getHP']"
     ></v-progress-linear>
     <v-progress-linear
-      v-else-if="getHP <= 50"
+      v-else-if="$store.getters['game/getHP'] <= 50"
       height="25"
       color="yellow"
-      :value="getHP"
+      :value="$store.getters['game/getHP']"
     ></v-progress-linear>
     <v-progress-linear
       v-else
       height="25"
       color="green"
-      :value="getHP"
+      :value="$store.getters['game/getHP']"
     ></v-progress-linear>
     {{ this.$store.state.game.HP }}/{{ this.$store.state.game.maxHP }}
   </div>
@@ -29,12 +29,6 @@ export default {
   data: () => ({}),
 
   methods: {},
-
-  computed: {
-    getHP() {
-      return (this.$store.state.game.HP / this.$store.state.game.maxHP) * 100
-    },
-  },
 
   // created() {
   //   this.$store.commit('game/setHP', 100)
