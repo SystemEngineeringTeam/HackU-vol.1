@@ -71,10 +71,10 @@ export const actions = {
     }
   },
 
-  async getHP({ state, commit, dispatch }) {
+  async getHP({ rootState, commit, dispatch }) {
     await axios
       .get(process.env.URL_HP, {
-        params: { userToken: state.token },
+        params: { userToken: rootState.user.token },
       })
       .then((res) => {
         if (res.status === 200) {
@@ -110,6 +110,9 @@ export const actions = {
       return
     }
     let log = state.log
+    if(state.logCount.length !== rootState.tasks.tasks.length){
+      dispatch('logCountInit')
+    }
     let logCount = state.logCount
     rootState.tasks.tasks.forEach((element, index) => {
       let attackRnd = Math.random()
