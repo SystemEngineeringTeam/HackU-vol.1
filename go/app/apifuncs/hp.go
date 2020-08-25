@@ -50,6 +50,7 @@ func HpResponse(w http.ResponseWriter, r *http.Request) {
 		r.Header.Set("Content-Type", "application/json")
 		// JSONを返す
 		fmt.Fprintln(w, jsonString)
+			
 	}
 
 }
