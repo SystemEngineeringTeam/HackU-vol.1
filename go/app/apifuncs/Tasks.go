@@ -50,7 +50,7 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 		}
 
 		jsonString := string(jsonBytes)
-		
+
 		// httpステータスコードを返す<-New
 		w.WriteHeader(http.StatusOK)
 		r.Header.Set("Content-Type", "application/json")
@@ -87,6 +87,15 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusServiceUnavailable)
 			fmt.Println("database error", err)
 			return
+		}
+
+		//タスクを追加した後にダメージ処理を含むupdated_datetimeのアップデートを行う
+		_, err = dbctl.CallHpFromUserToken(userToken)
+		if err != nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			fmt.Println("database error", err)
+			return
+
 		}
 
 		w.WriteHeader(http.StatusOK)
@@ -140,7 +149,11 @@ func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusServiceUnavailable)
 			fmt.Println("database error", err)
 			return
-		}					
+		}
+
+		//データベースのhpを回復させる
+		dbctl.RecoveryHp(userToken)
+
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -160,7 +173,6 @@ func TaskDifficulty(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("database err", err)
 		return
 	}
-
 	w.WriteHeader(http.StatusOK)
 
 	r.Header.Set("Content-Type", "application/json")
