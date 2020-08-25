@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="6">
+    <v-col cols="12" sm="6">
       <v-menu
         v-model="datePick"
         :close-on-content-click="false"
@@ -27,7 +27,7 @@
         ></v-date-picker>
       </v-menu>
     </v-col>
-    <v-col cols="6">
+    <v-col cols="12" sm="6">
       <v-menu
         ref="menu"
         v-model="timePick"
