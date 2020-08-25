@@ -1,7 +1,6 @@
 package dbctl
 
 import (
-	"fmt"
 	"log"
 	"runtime"
 	"time"
@@ -144,12 +143,29 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 	//それぞれのtaskのダメージ計算
 	for _, taskID := range taskIDs {
 
+		rowsTaskFlag, err := db.Query("select isAchieve from tasks where id=?", taskID)
+		if err != nil {
+			return -1, err
+		}
+		var taskFlag int
+		for rowsTaskFlag.Next() {
+			taskFlag = 0
+			rowsTaskFlag.Scan(&taskFlag)
+		}
+
+		//task成功してるなら
+		if taskFlag == 1 {			
+			
+			continue
+		}
+
 		//それぞれのタスクの重さ
 		rowsWeightIDs, err := db.Query("select weight_id from tasks where id=?", taskID)
 		if err != nil {
 			return -1, err
 		}
 		defer rowsWeightIDs.Close()
+
 		//タスク一つの重さ
 		var weightID int
 
@@ -164,16 +180,11 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 		//float型をint型に変換したもの
 		var intDiffUpdateDate int = int(diffUpdateDate.Seconds())
 
-		fmt.Print("intDiffUpdate=")
-		fmt.Println(intDiffUpdateDate)
-
 		if weightID == 0 {
 			weightID = 1
 		}
 
 		totalDamage = totalDamage + intDiffUpdateDate*weightID
-
-		fmt.Println(weightID)
 
 	}
 
@@ -183,7 +194,6 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 	_, err = db.Exec("update user_parameters set updated_datetime=Now() where id=?", temporaryUserID)
 
 	currentHp := pastHp - totalDamage
-	fmt.Println(currentHp, pastHp, totalDamage)
 
 	return currentHp, nil
 
@@ -258,6 +268,9 @@ func CountTaskIDUpdateTime(token string) error {
 		//stringUpdateNowTime := nowTime.Format(layout)
 		//updated_datetimeの更新
 		_, err = db.Exec("update user_parameters set updated_datetime=Now() where id=?", temporaryUserID)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
