@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="2" v-for="(task, i) in tasks" :key="i">
+    <v-col cols="4" sm="2" v-for="(task, i) in slicedTasks" :key="i">
       <Monster :task="task" />
     </v-col>
   </v-row>
@@ -14,17 +14,47 @@ export default {
   },
   name: 'MonsterView',
 
-  data: () => ({}),
+  data: () => ({
+    slicedTasks: [],
+  }),
+
+  methods: {
+    // 3~6匹までモンスターを表示する用
+    setSlicedTasks: function () {
+      let monsterNum = 6
+      if (window.innerWidth < 600) {
+        monsterNum = 3
+      }
+
+      if (this.tasks.length <= monsterNum) {
+        this.slicedTasks = this.tasks
+      } else {
+        this.slicedTasks = this.tasks.slice(0, monsterNum)
+      }
+    }
+  },
 
   computed: {
-    // 6匹までモンスターを表示する用
-    tasks() {
-      if (this.$store.state.tasks.tasks.length <= 6) {
+    tasks: {
+      get() {
         return this.$store.state.tasks.tasks
-      } else {
-        return this.$store.state.tasks.tasks.slice(0, 6)
-      }
+      },
     },
+  },
+
+  watch: {
+    tasks: function () {
+      this.setSlicedTasks()
+    },
+  },
+
+  created() {
+    this.setSlicedTasks()
+    window.addEventListener('resize', this.setSlicedTasks)
+  },
+
+  destroyed() {
+    window.removeEventListener('resize', this.setSlicedTasks)
   },
 }
 </script>
