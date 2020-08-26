@@ -58,6 +58,7 @@ func CallHpFromUserToken(token string) (Hp, error) {
 	defer rows.Close()
 	var updateDate string
 	for rows.Next() {
+
 		rows.Scan(&updateDate)
 	}
 
@@ -128,11 +129,11 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 	var totalDamage int = 0
 	var err error
 	//現在の日付と時刻
-	jst, _ := time.LoadLocation("Asia/Tokyo")
+	jst, err := time.LoadLocation("Asia/Tokyo")
+	if err != nil {
+		return -1, err
+	}
 	nowTime := time.Now()
-
-	//現在の時刻を秒数に変換したもの
-	//dataSecond := (data.Hour() * 3600) + (data.Minute() * 60) + data.Second()
 
 	//フォーマットの整形time型の"2020-08-22 11:58:06 +0000 UTC"のような形式で表示される
 	thenUpdateDate, err := time.ParseInLocation(layout, updateDate, jst)
@@ -152,10 +153,19 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 			taskFlag = 0
 			rowsTaskFlag.Scan(&taskFlag)
 		}
-
 		//task成功してるなら
-		if taskFlag == 1 {			
-			
+		if taskFlag == 1 {
+
+			continue
+		}
+
+		//期限がついているのかの判定処理
+		judgmentOneweekagoFlag, err := judgmentTaskDealineOneWeekAgo(taskID)
+		if err != nil {
+			return -1, err
+		}
+		//１週間以上の場合計算処理をしない
+		if judgmentOneweekagoFlag == true {
 			continue
 		}
 
@@ -165,10 +175,8 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 			return -1, err
 		}
 		defer rowsWeightIDs.Close()
-
 		//タスク一つの重さ
 		var weightID int
-
 		for rowsWeightIDs.Next() {
 			weightID = 0
 			rowsWeightIDs.Scan(&weightID)
@@ -176,7 +184,6 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 
 		//hpをアップデートした日(タスクを登録した時にもされる)と現在時刻の差
 		diffUpdateDate := nowTime.Sub(thenUpdateDate)
-
 		//float型をint型に変換したもの
 		var intDiffUpdateDate int = int(diffUpdateDate.Seconds())
 
@@ -185,18 +192,110 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 		}
 
 		totalDamage = totalDamage + intDiffUpdateDate*weightID
-
 	}
 
 	//time型をstring型に変換したもの"2020-08-24 22:46:04"のような形になる
 	//stringUpdateNowTime := nowTime.Format(layout)
 	//データベースのupdate_datetimeを現在時刻に変更
 	_, err = db.Exec("update user_parameters set updated_datetime=Now() where id=?", temporaryUserID)
+	if err != nil {
+		return -1, err
+	}
 
 	currentHp := pastHp - totalDamage
 
+	//hpが0以下の処理
+	if currentHp < 0 {
+		currentHp = 0
+	}
+
 	return currentHp, nil
 
+}
+
+func judgmentTaskDealineOneWeekAgo(taskID int) (bool, error) {
+
+	deadlineDateExist, err := judgmentTaskDeadlineDateExist(taskID)
+	if err != nil {
+		return false, err
+	}
+	//締め切りが存在しない場合falseをかえす
+	if deadlineDateExist == false {
+		return false, nil
+	}
+
+	//以下締め切りが存在する場合の処理
+	//現在の日付と時刻
+	jst, err := time.LoadLocation("Asia/Tokyo")
+	if err != nil {
+		return false, err
+	}
+	nowTime := time.Now()
+
+	//日付と時刻を連絵ｋ津したもの
+	TaskDeadlineDateAndTime, err := returnTaskDeadlineDateAndTime(taskID)
+
+	//フォーマットの整形time型の"2020-08-22 11:58:06のような形式で表示される
+	thenTaskDeadlineDateAndTime, err := time.ParseInLocation(layout, TaskDeadlineDateAndTime, jst)
+	//締め切りと現在時刻の差をとる
+	diffTaskDeadlineDateAndTime := nowTime.Sub(thenTaskDeadlineDateAndTime)
+
+	//締め切りと現在時刻の差が1週間以上の場合
+	if diffTaskDeadlineDateAndTime.Hours() < -168 {
+
+		return true, nil
+	}
+
+	return false, nil
+}
+
+func judgmentTaskDeadlineDateExist(taskID int) (bool, error) {
+	rowsTaskDeadlineDate, err := db.Query("select deadline_date from tasks where id=?", taskID)
+	if err != nil {
+		return true, err
+	}
+	defer rowsTaskDeadlineDate.Close()
+	var TaskDeadlineDate string
+	for rowsTaskDeadlineDate.Next() {
+		rowsTaskDeadlineDate.Scan(&TaskDeadlineDate)
+	}
+
+	//taskの締め切りが存在しない場合
+	if TaskDeadlineDate == "" {
+
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func returnTaskDeadlineDateAndTime(taskID int) (string, error) {
+	//締め切り日の取得
+	rowsTaskDeadlineDate, err := db.Query("select deadline_date from tasks where id=?", taskID)
+	if err != nil {
+		return "", err
+	}
+	defer rowsTaskDeadlineDate.Close()
+	var TaskDeadlineDate string
+	for rowsTaskDeadlineDate.Next() {
+		rowsTaskDeadlineDate.Scan(&TaskDeadlineDate)
+	}
+
+	//締め切り時刻の取得
+	rowsTaskDeadlineTime, err := db.Query("select deadline_time from tasks where id=?", taskID)
+	if err != nil {
+		return "", err
+	}
+	defer rowsTaskDeadlineTime.Close()
+	var TaskDeadlineTime string
+	for rowsTaskDeadlineTime.Next() {
+		rowsTaskDeadlineTime.Scan(&TaskDeadlineTime)
+	}
+
+	//締め切り日時と時刻を連結
+	TaskDeadlineDateAndTime := TaskDeadlineDate + " " + TaskDeadlineTime
+
+	return TaskDeadlineDateAndTime, nil
 }
 
 //RecoveryHp はタスクが達成されたときに20万回復する処理を行う
