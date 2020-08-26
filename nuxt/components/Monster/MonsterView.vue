@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row v-resize="setSlicedTasks">
     <v-col cols="4" sm="2" v-for="(task, i) in slicedTasks" :key="i">
       <Monster :task="task" />
     </v-col>
@@ -50,11 +50,6 @@ export default {
 
   created() {
     this.setSlicedTasks()
-    window.addEventListener('resize', this.setSlicedTasks)
-  },
-
-  destroyed() {
-    window.removeEventListener('resize', this.setSlicedTasks)
   },
 }
 </script>
