@@ -159,7 +159,7 @@ export const getters = {
 
   calcDamage: (_state, _getters, rootState) => (weight, count) => {
     let weights = rootState.tasks.weights
-    let weightIndex = weights.findIndex((element) => element === weight)
+    let weightIndex = weights.findIndex((element) => element === weight) + 1
     if (weightIndex === -1) {
       weightIndex = 1
     }
