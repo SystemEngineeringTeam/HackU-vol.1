@@ -81,14 +81,17 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//taskが0の時現在時刻にUpdate
-		if err := dbctl.CountTaskIDUpdateTime(userToken); err != nil {
+		var completeOrFirstTask bool
+		if completeOrFirstTask, err = dbctl.CompleteTask(userToken); err != nil {
 			w.WriteHeader(http.StatusServiceUnavailable)
 			fmt.Println("database error", err)
 			return
 		}
-
-		//task登録の際に未達成のtaskが0または新規ユーザの初回task登録の時の処理時刻をupdate_timeを現在時刻にする
+		//task登録の際にtaskが全て達成済みまたは新規ユーザの初回task登録の時の処理時刻をupdate_timeを現在時刻にする
+		if completeOrFirstTask == true {
+			dbctl.TaskIDUpdateTime(userToken)
+			fmt.Println("firstorComplete")
+		}
 
 		//taskの登録
 		taskID, err := dbctl.RegisterNewTask(userToken, data)
@@ -182,6 +185,7 @@ func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("database error", err)
 			return
 		}
+
 		//taskが全て達成済みの場合hpを100万にする
 		if completeTaskFlag == true {
 			err := dbctl.ChangeHpMillion(userToken)

@@ -322,6 +322,7 @@ func CompleteTask(token string) (bool, error) {
 		}
 	}
 
+	//タスクが全て完了している場合
 	if len(taskIDs) == completeTaskCount {
 		return true, nil
 	}

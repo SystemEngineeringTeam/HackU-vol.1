@@ -169,7 +169,7 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 		if judgmentOneweekagoFlag == true {
 			continue
 		}
-		
+
 		//それぞれのタスクの重さ
 		rowsWeightIDs, err := db.Query("select weight_id from tasks where id=?", taskID)
 		if err != nil {
@@ -328,19 +328,20 @@ func RecoveryHp(token string) error {
 	return nil
 }
 
-//CountTaskIDUpdateTime はtaskIDの数を数えて時刻をアップデートする
-func CountTaskIDUpdateTime(token string) error {
+//TaskIDUpdateTime はtaskIDの数を数えて時刻をアップデートする
+func TaskIDUpdateTime(token string) error {
 
-	taskIDs, err := callTaskIDsFromUserToken(token)
-	if err != nil {
-		return err
-	}
+	/* 	taskIDs, err := callTaskIDsFromUserToken(token)
+	   	if err != nil {
+	   		return err
+	   	} */
 
-	//usersのtokenからuser)parametersのidを取得
+	//usersのtokenからuser_parametersのidを取得
 	rows, err := db.Query("select param_id from users where token=?", token)
 	if err != nil {
 		return err
 	}
+
 	//Next が呼び出されて false が返され，それ以上結果セットがない場合， rows は自動的に閉じられる
 	defer rows.Close()
 	//usersテーブルのparam_idの変数
@@ -350,17 +351,20 @@ func CountTaskIDUpdateTime(token string) error {
 		rows.Scan(&temporaryUserID)
 	}
 
-	//タスクが0だったら
+	_, err = db.Exec("update user_parameters set updated_datetime=Now() where id=?", temporaryUserID)
+	if err != nil {
+		return err
+	}
+	fmt.Println("update")
+
+	/* //タスクが0だったら
 	if len(taskIDs) == 0 {
 		//nowTime := time.Now()
 		//time型をstring型に変換したもの"2020-08-24 22:46:04"のような形になる
 		//stringUpdateNowTime := nowTime.Format(layout)
 		//updated_datetimeの更新
-		_, err = db.Exec("update user_parameters set updated_datetime=Now() where id=?", temporaryUserID)
-		if err != nil {
-			return err
-		}
-	}
+
+	} */
 
 	return nil
 }
