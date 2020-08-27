@@ -116,6 +116,7 @@ export default {
       }
       this.postDialogBool = false
       this.$store.dispatch('tasks/postTask')
+      this.$store.dispatch('game/writeEnterLog', this.title)
       this.detailPicker = false
     },
   },

@@ -146,6 +146,11 @@ export const actions = {
     commit('setLog', log)
   },
 
+  writeEnterLog({ state, commit }, title) {
+    let log = title + 'が現れた！\n' + state.log
+    commit('setLog', log)
+  },
+
   logout({ state, commit }) {
     commit('setHP', state.maxHP)
     commit('setLog', '')
