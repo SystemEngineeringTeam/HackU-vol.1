@@ -1,6 +1,6 @@
 <template>
   <v-row v-resize="setSlicedTasks">
-    <v-col cols="4" sm="2" v-for="(task, i) in slicedTasks" :key="i">
+    <v-col cols="3" sm="2" v-for="(task, i) in slicedTasks" :key="i">
       <Monster :task="task" />
     </v-col>
   </v-row>
@@ -23,7 +23,7 @@ export default {
     setSlicedTasks: function () {
       let monsterNum = 6
       if (window.innerWidth < 600) {
-        monsterNum = 3
+        monsterNum = 4
       }
 
       if (this.tasks.length <= monsterNum) {
