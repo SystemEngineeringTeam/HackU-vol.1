@@ -108,6 +108,7 @@ export default {
     postCancel() {
       this.postDialogBool = false
       this.$store.dispatch('tasks/postAllReset')
+      this.detailPicker = false
     },
     doPost() {
       if (this.title === '') {
@@ -115,6 +116,7 @@ export default {
       }
       this.postDialogBool = false
       this.$store.dispatch('tasks/postTask')
+      this.detailPicker = false
     },
   },
 

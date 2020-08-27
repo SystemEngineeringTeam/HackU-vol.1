@@ -3,7 +3,7 @@ use production_db;
 create table user_parameters(
     id int auto_increment not null primary key,
     hp int not null,
-    updated_datetime not null datetime
+    updated_datetime datetime not null
 );
 
 create table users(

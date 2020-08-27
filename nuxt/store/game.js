@@ -71,10 +71,10 @@ export const actions = {
     }
   },
 
-  async getHP({ state, commit, dispatch }) {
+  async getHP({ rootState, commit, dispatch }) {
     await axios
       .get(process.env.URL_HP, {
-        params: { userToken: state.token },
+        params: { userToken: rootState.user.token },
       })
       .then((res) => {
         if (res.status === 200) {
@@ -105,26 +105,30 @@ export const actions = {
     commit('setDieFlag', false)
   },
 
-  writeDamageLog({ state, rootState, commit, dispatch }) {
+  writeDamageLog({ state, rootState, commit, dispatch, getters }) {
     if (state.dieFlag) {
       return
     }
     let log = state.log
+    if (state.logCount.length !== rootState.tasks.tasks.length) {
+      dispatch('logCountInit')
+    }
     let logCount = state.logCount
     rootState.tasks.tasks.forEach((element, index) => {
       let attackRnd = Math.random()
       if (attackRnd <= 0.3) {
         let logIndex = Math.random() * state.logVariation.length
         logIndex = Math.floor(logIndex)
+        let damage = getters.calcDamage(element.weight, logCount[index])
         log =
           element.title +
           state.logVariation[logIndex] +
           rootState.user.name +
           'は' +
-          1 * logCount[index] +
+          damage +
           'のダメージを受けた！\n' +
           log
-        dispatch('lowerHP', logCount[index] * 100000)
+        dispatch('lowerHP', damage)
         logCount[index] = 1
       } else {
         logCount[index] += 1
@@ -151,5 +155,14 @@ export const actions = {
 export const getters = {
   getHP: (state) => {
     return (state.HP / state.maxHP) * 100
+  },
+
+  calcDamage: (_state, _getters, rootState) => (weight, count) => {
+    let weights = rootState.tasks.weights
+    let weightIndex = weights.findIndex((element) => element === weight) + 1
+    if (weightIndex === -1) {
+      weightIndex = 1
+    }
+    return weightIndex * count
   },
 }
