@@ -19,7 +19,7 @@ type Task struct {
 
 // CallTasks はタスク一覧を返す関数
 func CallTasks(token string) ([]Task, error) {
-	userID, err := callUserIDFromToken(token)	
+	userID, err := callUserIDFromToken(token)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func callTaskIDsFromUserID(userID int) ([]int, error) {
 	for rows.Next() {
 		temporaryID := 0
 		rows.Scan(&temporaryID)
-		taskIDs = append(taskIDs, temporaryID)		
+		taskIDs = append(taskIDs, temporaryID)
 	}
 
 	return taskIDs, nil
@@ -291,4 +291,41 @@ func CallWeightsList() (string, error) {
 	arrayString := convertStringArrayToJSONArray(weights)
 
 	return arrayString, nil
+}
+
+//CompleteTask はtaskが全て完了しているかを判断する
+func CompleteTask(token string) (bool, error) {
+
+	userID, err := callUserIDFromToken(token)
+	if err != nil {
+		return false, err
+	}
+	taskIDs, err := callTaskIDsFromUserID(userID)
+	if err != nil {
+		return false, err
+	}
+
+	completeTaskCount := 0
+	for _, taskID := range taskIDs {
+
+		rowsTaskFlag, err := db.Query("select isAchieve from tasks where id=?", taskID)
+		if err != nil {
+			return false, err
+		}
+		var taskFlag int
+		for rowsTaskFlag.Next() {
+			taskFlag = 0
+			rowsTaskFlag.Scan(&taskFlag)
+		}
+		if taskFlag == 1 {
+			completeTaskCount++
+		}
+	}
+
+	//タスクが全て完了している場合
+	if len(taskIDs) == completeTaskCount {
+		return true, nil
+	}
+
+	return false, nil
 }
