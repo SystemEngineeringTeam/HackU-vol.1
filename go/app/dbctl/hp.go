@@ -136,7 +136,7 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 	}
 	nowTime := time.Now()
 
-	//フォーマットの整形time型の"2020-08-22 11:58:06 +0000 UTC"のような形式で表示される
+	//フォーマットの整形time型の日本時間で表示される
 	thenUpdateDate, err := time.ParseInLocation(layout, updateDate, jst)
 	if err != nil {
 		return -1, err
@@ -182,14 +182,26 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 			weightID = 0
 			rowsWeightIDs.Scan(&weightID)
 		}
+		if weightID == 0 {
+			weightID = 1
+		}
 
 		//hpをアップデートした日(タスクを登録した時にもされる)と現在時刻の差
 		diffUpdateDate := nowTime.Sub(thenUpdateDate)
-		//float型をint型に変換したもの
+		//time型をint型に変換したもの
 		var intDiffUpdateDate int = int(diffUpdateDate.Seconds())
+		println("intdiffupdata=", intDiffUpdateDate)
 
-		if weightID == 0 {
-			weightID = 1
+		//戻り値はint型
+		diffTaskDeadlineOneWeekAgo, err := returndiffTaskDeadlineOneWeekAgo(taskID)
+		if err != nil {
+			return -1, err
+		}
+
+		//taskが1週間以内に入ってきたときのダメージを正常化する処理
+		if intDiffUpdateDate > diffTaskDeadlineOneWeekAgo {
+			fmt.Println("Normalization")
+			intDiffUpdateDate = diffTaskDeadlineOneWeekAgo
 		}
 
 		totalDamage = totalDamage + intDiffUpdateDate*weightID
@@ -277,13 +289,65 @@ func returnTaskDeadlineDateAndTime(taskID int) (string, error) {
 		rowsTaskDeadline.Scan(&taskDeadlineDate, &taskDeadlineTime)
 	}
 
-	println("taskDeadlineDate=", taskDeadlineDate)
-	println("taskDeadlineTIme=", taskDeadlineTime)
-
 	//締め切り日時と時刻を連結
 	taskDeadlineDateAndTime := taskDeadlineDate + " " + taskDeadlineTime
 
 	return taskDeadlineDateAndTime, nil
+}
+
+func returndiffTaskDeadlineOneWeekAgo(taskID int) (int, error) {
+	//締め切りの日付と時間を取得
+	taskDeadlineTypeString, err := returnTaskDeadlineDateAndTime(taskID)
+	if err != nil {
+		return -1, err
+	}
+	//string型→time型に変換
+	taskDeadlineTypeTime, err := stringToTime(taskDeadlineTypeString)
+	if err != nil {
+		return -1, err
+	}
+
+	//締め切りを1週間前のtime型の取得
+	TaskDeadlineOneWeekAgoTypeTime := taskDeadlineTypeTime.AddDate(0, 0, -7)
+	//time型→string型
+	TaskDeadlineOneWeekAgoTypeString := timeToString(TaskDeadlineOneWeekAgoTypeTime)
+	//2018-04-06 17:59:20のような表示形式になる
+
+	//現在の日付と時刻
+	jst, err := time.LoadLocation("Asia/Tokyo")
+	if err != nil {
+		return -1, err
+	}
+	nowTime := time.Now()
+
+	//フォーマットの整形time型の日本時間で表示される
+	DeadlineOneWeekAgo, err := time.ParseInLocation(layout, TaskDeadlineOneWeekAgoTypeString, jst)
+	if err != nil {
+		return -1, err
+	}
+
+	//締め切り1週間前と現在時刻の差
+	diffTaskDeadlineOneWeekAgo := nowTime.Sub(DeadlineOneWeekAgo)
+	//float型をint型に変換したもの
+	var intDiffTaskDeadlineOneWeekAgo int = int(diffTaskDeadlineOneWeekAgo.Seconds())
+
+	fmt.Println("intDiffTaskDealineOneWeekAgo=", intDiffTaskDeadlineOneWeekAgo)
+
+	return intDiffTaskDeadlineOneWeekAgo, nil
+
+}
+
+func timeToString(t time.Time) string {
+	str := t.Format(layout)
+	return str
+}
+
+func stringToTime(str string) (time.Time, error) {
+	t, err := time.Parse(layout, str)
+	if err != nil {
+		return t, err
+	}
+	return t, nil
 }
 
 //RecoveryHp はタスクが達成されたときに20万回復する処理を行う
@@ -334,8 +398,7 @@ func TaskIDUpdateTime(token string) error {
 	/* 	taskIDs, err := callTaskIDsFromUserToken(token)
 	   	if err != nil {
 	   		return err
-	   	} */
-
+		   } */		   		   		   
 	//usersのtokenからuser_parametersのidを取得
 	rows, err := db.Query("select param_id from users where token=?", token)
 	if err != nil {
@@ -350,21 +413,12 @@ func TaskIDUpdateTime(token string) error {
 		temporaryUserID = 0
 		rows.Scan(&temporaryUserID)
 	}
-
+	
 	_, err = db.Exec("update user_parameters set updated_datetime=Now() where id=?", temporaryUserID)
 	if err != nil {
 		return err
 	}
 	fmt.Println("update")
-
-	/* //タスクが0だったら
-	if len(taskIDs) == 0 {
-		//nowTime := time.Now()
-		//time型をstring型に変換したもの"2020-08-24 22:46:04"のような形になる
-		//stringUpdateNowTime := nowTime.Format(layout)
-		//updated_datetimeの更新
-
-	} */
 
 	return nil
 }
