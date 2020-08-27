@@ -12,6 +12,7 @@
       </div>
     </v-col>
     <postDialog />
+    <DieDialog />
   </v-row>
 </template>
 
@@ -20,13 +21,15 @@ import Task from '../components/Task'
 import postDialog from '../components/postDialog'
 import Logbox from '../components/Logbox'
 import MonsterView from '../components/Monster/MonsterView'
+import DieDialog from '../components/DieDialog'
 
 export default {
   components: {
     Task,
     postDialog,
     Logbox,
-    MonsterView
+    MonsterView,
+    DieDialog
   },
 
   data: () => ({

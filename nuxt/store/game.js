@@ -118,7 +118,7 @@ export const actions = {
       let taskDealineOneWeekAgo = getters.judgmentTaskDealineOneWeekAgo(
         rootState.tasks.tasks[i]
       )
-      if(!taskDealineOneWeekAgo){
+      if (!taskDealineOneWeekAgo) {
         continue
       }
       let attackRnd = Math.random()
@@ -198,5 +198,9 @@ export const getters = {
     } else {
       return false
     }
+  },
+
+  dieFlag: (state) => {
+    return state.dieFlag
   },
 }
