@@ -1,6 +1,7 @@
 package dbctl
 
 import (
+	"fmt"
 	"log"
 	"runtime"
 	"time"
@@ -168,7 +169,7 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 		if judgmentOneweekagoFlag == true {
 			continue
 		}
-
+		
 		//それぞれのタスクの重さ
 		rowsWeightIDs, err := db.Query("select weight_id from tasks where id=?", taskID)
 		if err != nil {
@@ -192,6 +193,7 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 		}
 
 		totalDamage = totalDamage + intDiffUpdateDate*weightID
+		fmt.Println("damage")
 	}
 
 	//time型をstring型に変換したもの"2020-08-24 22:46:04"のような形になる
@@ -214,12 +216,11 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 }
 
 func judgmentTaskDealineOneWeekAgo(taskID int) (bool, error) {
-
 	deadlineDateExist, err := judgmentTaskDeadlineDateExist(taskID)
 	if err != nil {
 		return false, err
 	}
-	//締め切りが存在しない場合falseをかえす
+	//締め切りが存在しない場合falseを返して終了
 	if deadlineDateExist == false {
 		return false, nil
 	}
@@ -231,21 +232,17 @@ func judgmentTaskDealineOneWeekAgo(taskID int) (bool, error) {
 		return false, err
 	}
 	nowTime := time.Now()
-
-	//日付と時刻を連絵ｋ津したもの
+	//日付と時刻を連絵したもの
 	TaskDeadlineDateAndTime, err := returnTaskDeadlineDateAndTime(taskID)
-
 	//フォーマットの整形time型の"2020-08-22 11:58:06のような形式で表示される
 	thenTaskDeadlineDateAndTime, err := time.ParseInLocation(layout, TaskDeadlineDateAndTime, jst)
 	//締め切りと現在時刻の差をとる
 	diffTaskDeadlineDateAndTime := nowTime.Sub(thenTaskDeadlineDateAndTime)
-
 	//締め切りと現在時刻の差が1週間以上の場合
 	if diffTaskDeadlineDateAndTime.Hours() < -168 {
 
 		return true, nil
 	}
-
 	return false, nil
 }
 
@@ -259,52 +256,43 @@ func judgmentTaskDeadlineDateExist(taskID int) (bool, error) {
 	for rowsTaskDeadlineDate.Next() {
 		rowsTaskDeadlineDate.Scan(&TaskDeadlineDate)
 	}
-
 	//taskの締め切りが存在しない場合
 	if TaskDeadlineDate == "" {
 
 		return false, nil
 	}
-
 	return true, nil
 }
 
 func returnTaskDeadlineDateAndTime(taskID int) (string, error) {
-	//締め切り日の取得
-	rowsTaskDeadlineDate, err := db.Query("select deadline_date from tasks where id=?", taskID)
+	//締め切り日時の取得
+	rowsTaskDeadline, err := db.Query("select deadline_date,deadline_time from tasks where id=?", taskID)
 	if err != nil {
 		return "", err
 	}
-	defer rowsTaskDeadlineDate.Close()
-	var TaskDeadlineDate string
-	for rowsTaskDeadlineDate.Next() {
-		rowsTaskDeadlineDate.Scan(&TaskDeadlineDate)
+	defer rowsTaskDeadline.Close()
+	var taskDeadlineDate string
+	var taskDeadlineTime string
+	for rowsTaskDeadline.Next() {
+		rowsTaskDeadline.Scan(&taskDeadlineDate, &taskDeadlineTime)
 	}
 
-	//締め切り時刻の取得
-	rowsTaskDeadlineTime, err := db.Query("select deadline_time from tasks where id=?", taskID)
-	if err != nil {
-		return "", err
-	}
-	defer rowsTaskDeadlineTime.Close()
-	var TaskDeadlineTime string
-	for rowsTaskDeadlineTime.Next() {
-		rowsTaskDeadlineTime.Scan(&TaskDeadlineTime)
-	}
+	println("taskDeadlineDate=", taskDeadlineDate)
+	println("taskDeadlineTIme=", taskDeadlineTime)
 
 	//締め切り日時と時刻を連結
-	TaskDeadlineDateAndTime := TaskDeadlineDate + " " + TaskDeadlineTime
+	taskDeadlineDateAndTime := taskDeadlineDate + " " + taskDeadlineTime
 
-	return TaskDeadlineDateAndTime, nil
+	return taskDeadlineDateAndTime, nil
 }
 
 //RecoveryHp はタスクが達成されたときに20万回復する処理を行う
-func RecoveryHp(token string) {
+func RecoveryHp(token string) error {
 
 	//トークンからparamIDを取得
 	rows, err := db.Query("select param_id from users where token=?", token)
 	if err != nil {
-		return
+		return err
 	}
 	defer rows.Close()
 	var temporaryUserID int
@@ -316,7 +304,7 @@ func RecoveryHp(token string) {
 	//現在のhpを取得
 	rows, err = db.Query("select hp from user_parameters where id=?", temporaryUserID)
 	if err != nil {
-		return
+		return err
 	}
 	defer rows.Close()
 	var pastHp int
@@ -334,8 +322,10 @@ func RecoveryHp(token string) {
 	//user_parametersの更新
 	_, err = db.Exec("update user_parameters set hp=? where id=?", recoveryAfterHp, temporaryUserID)
 	if err != nil {
-		return
+		return err
 	}
+
+	return nil
 }
 
 //CountTaskIDUpdateTime はtaskIDの数を数えて時刻をアップデートする
@@ -373,4 +363,27 @@ func CountTaskIDUpdateTime(token string) error {
 	}
 
 	return nil
+}
+
+//ChangeHpMillion はhpを100万にする
+func ChangeHpMillion(userToken string) error {
+	rows, err := db.Query("select param_id from users where token=?", userToken)
+	if err != nil {
+		return err
+	}
+	//Next が呼び出されて false が返され，それ以上結果セットがない場合， rows は自動的に閉じられる
+	defer rows.Close()
+	//usersテーブルのparam_idの変数
+	var temporaryUserID int
+	for rows.Next() {
+		temporaryUserID = 0
+		rows.Scan(&temporaryUserID)
+	}
+
+	_, err = db.Exec("update user_parameters set hp=? where id=?", 1000000, temporaryUserID)
+	if err != nil {
+		return err
+	}
+	return nil
+
 }

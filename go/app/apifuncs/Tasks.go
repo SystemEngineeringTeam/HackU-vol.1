@@ -81,13 +81,14 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-
 		//taskが0の時現在時刻にUpdate
-		if err := dbctl.CountTaskIDUpdateTime(userToken); err!=nil {
+		if err := dbctl.CountTaskIDUpdateTime(userToken); err != nil {
 			w.WriteHeader(http.StatusServiceUnavailable)
-			fmt.Println("database error",err)
+			fmt.Println("database error", err)
 			return
 		}
+
+		//task登録の際に未達成のtaskが0または新規ユーザの初回task登録の時の処理時刻をupdate_timeを現在時刻にする
 
 		//taskの登録
 		taskID, err := dbctl.RegisterNewTask(userToken, data)
@@ -158,8 +159,37 @@ func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		//タスクを達成した時にもダメージ処理
+		_, err = dbctl.CallHpFromUserToken(userToken)
+		if err != nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			fmt.Println("database error", err)
+			return
+		}
+
 		//データベースのhpを回復させる
-		dbctl.RecoveryHp(userToken)
+		err = dbctl.RecoveryHp(userToken)
+		if err != nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			fmt.Println("database error", err)
+			return
+		}
+
+		//完了したtaskの数と登録のtaskの数が同じの場合true
+		completeTaskFlag, err := dbctl.CompleteTask(userToken)
+		if err != nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			fmt.Println("database error", err)
+			return
+		}
+		//taskが全て達成済みの場合hpを100万にする
+		if completeTaskFlag == true {
+			err := dbctl.ChangeHpMillion(userToken)
+			fmt.Println("taskComplete")
+			if err != nil {
+				return
+			}
+		}
 
 	}
 
@@ -168,6 +198,7 @@ func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 
 //TaskDifficulty は/tasks/weightsに対する処理
 func TaskDifficulty(w http.ResponseWriter, r *http.Request) {
+
 	//セキリティ設定
 	w.Header().Set("Access-Control-Allow-Origin", "*")                       // Allow any access.
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE") // Allowed methods.
