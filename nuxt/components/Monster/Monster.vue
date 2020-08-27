@@ -21,8 +21,21 @@
   }
 }
 
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
 .monster {
   animation: fuwafuwa 1s linear infinite alternate;
+}
+.monster:hover {
+  animation: flash 0.3s linear infinite alternate;
 }
 </style>
 
