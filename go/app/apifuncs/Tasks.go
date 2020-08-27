@@ -90,7 +90,6 @@ func TaskResponse(w http.ResponseWriter, r *http.Request) {
 		//task登録の際にtaskが全て達成済みまたは新規ユーザの初回task登録の時の処理時刻をupdate_timeを現在時刻にする
 		if completeOrFirstTask == true {
 			dbctl.TaskIDUpdateTime(userToken)
-			fmt.Println("firstorComplete")
 		}
 
 		//taskの登録
@@ -189,7 +188,7 @@ func TaskSuccess(w http.ResponseWriter, r *http.Request) {
 		//taskが全て達成済みの場合hpを100万にする
 		if completeTaskFlag == true {
 			err := dbctl.ChangeHpMillion(userToken)
-			fmt.Println("taskComplete")
+
 			if err != nil {
 				return
 			}

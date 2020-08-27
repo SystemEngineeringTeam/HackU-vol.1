@@ -1,7 +1,6 @@
 package dbctl
 
 import (
-	"fmt"
 	"log"
 	"runtime"
 	"time"
@@ -160,7 +159,6 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 			continue
 		}
 
-		//期限がついているのかの判定処理
 		judgmentOneweekagoFlag, err := judgmentTaskDealineOneWeekAgo(taskID)
 		if err != nil {
 			return -1, err
@@ -190,22 +188,26 @@ func calculateCurrentHp(taskIDs []int, pastHp int, updateDate string, temporaryU
 		diffUpdateDate := nowTime.Sub(thenUpdateDate)
 		//time型をint型に変換したもの
 		var intDiffUpdateDate int = int(diffUpdateDate.Seconds())
-		println("intdiffupdata=", intDiffUpdateDate)
 
-		//戻り値はint型
-		diffTaskDeadlineOneWeekAgo, err := returndiffTaskDeadlineOneWeekAgo(taskID)
-		if err != nil {
+		var DeaadlineExist bool = false
+		if DeaadlineExist, err = judgmentTaskDeadlineDateExist(taskID); err != nil {
 			return -1, err
 		}
+		if DeaadlineExist == true {
 
-		//taskが1週間以内に入ってきたときのダメージを正常化する処理
-		if intDiffUpdateDate > diffTaskDeadlineOneWeekAgo {
-			fmt.Println("Normalization")
-			intDiffUpdateDate = diffTaskDeadlineOneWeekAgo
+			//戻り値はint型
+			diffTaskDeadlineOneWeekAgo, err := returndiffTaskDeadlineOneWeekAgo(taskID)
+			if err != nil {
+				return -1, err
+			}
+			//taskが1週間以内に入ってきたときのダメージを正常化する処理
+			if intDiffUpdateDate > diffTaskDeadlineOneWeekAgo {
+				intDiffUpdateDate = diffTaskDeadlineOneWeekAgo
+			}
 		}
 
 		totalDamage = totalDamage + intDiffUpdateDate*weightID
-		fmt.Println("damage")
+
 	}
 
 	//time型をstring型に変換したもの"2020-08-24 22:46:04"のような形になる
@@ -331,8 +333,6 @@ func returndiffTaskDeadlineOneWeekAgo(taskID int) (int, error) {
 	//float型をint型に変換したもの
 	var intDiffTaskDeadlineOneWeekAgo int = int(diffTaskDeadlineOneWeekAgo.Seconds())
 
-	fmt.Println("intDiffTaskDealineOneWeekAgo=", intDiffTaskDeadlineOneWeekAgo)
-
 	return intDiffTaskDeadlineOneWeekAgo, nil
 
 }
@@ -398,7 +398,7 @@ func TaskIDUpdateTime(token string) error {
 	/* 	taskIDs, err := callTaskIDsFromUserToken(token)
 	   	if err != nil {
 	   		return err
-		   } */		   		   		   
+		   } */
 	//usersのtokenからuser_parametersのidを取得
 	rows, err := db.Query("select param_id from users where token=?", token)
 	if err != nil {
@@ -413,12 +413,11 @@ func TaskIDUpdateTime(token string) error {
 		temporaryUserID = 0
 		rows.Scan(&temporaryUserID)
 	}
-	
+
 	_, err = db.Exec("update user_parameters set updated_datetime=Now() where id=?", temporaryUserID)
 	if err != nil {
 		return err
 	}
-	fmt.Println("update")
 
 	return nil
 }
