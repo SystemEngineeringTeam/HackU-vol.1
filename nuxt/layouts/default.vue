@@ -39,6 +39,7 @@ export default {
       this.$store.dispatch('user/logout')
       this.$store.dispatch('tasks/logout')
       this.$store.dispatch('game/logout')
+      this.$router.push('/login')
     },
   },
 }
