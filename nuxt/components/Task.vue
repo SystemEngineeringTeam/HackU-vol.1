@@ -36,7 +36,6 @@ export default {
       )
       this.$store.dispatch('tasks/successTask', index)
       this.$store.commit('tasks/setTaskIDbyDeleteAnimation', index)
-      this.$store.dispatch('game/recoveryHP')
       this.$store.dispatch('game/writeSuccessLog', this.task.title)
     },
   },

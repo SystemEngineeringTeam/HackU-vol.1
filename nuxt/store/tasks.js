@@ -184,7 +184,7 @@ export const actions = {
     context.commit('setPostWeight', '')
   },
 
-  async successTask({ state, rootState, commit }, index) {
+  async successTask({ state, rootState, commit, dispatch }, index) {
     await axios
       .post(
         process.env.URL_TASKS_SUCCESS,
@@ -200,6 +200,7 @@ export const actions = {
         if (res.status === 200) {
           commit('removeTask', index)
           commit('game/removeTask', index, { root: true })
+          dispatch('game/recoveryHP', null, { root: true })
         }
       })
   },
