@@ -83,10 +83,10 @@ export default {
 
   data: () => ({
     killing: false,
-    mimic: '/monster/mimic_dot.png',
-    slime: '/monster/slime_dot.png',
-    golem: '/monster/golem_dot.png',
-    dragon: '/monster/dragon_dot.png',
+    mimic: require('@/static/monster/mimic_dot.png'),
+    slime: require('@/static/monster/slime_dot.png'),
+    golem: require('@/static/monster/golem_dot.png'),
+    dragon: require('@/static/monster/dragon_dot.png'),
   }),
 
   methods: {},
