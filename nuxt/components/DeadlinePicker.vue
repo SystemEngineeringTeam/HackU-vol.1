@@ -24,6 +24,7 @@
           @input="datePick = false"
           no-title
           scrollable
+          color="red"
         ></v-date-picker>
       </v-menu>
     </v-col>
