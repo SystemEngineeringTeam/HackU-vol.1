@@ -32,10 +32,6 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
   /*
-   ** Global CSS
-   */
-  css: [],
-  /*
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
@@ -58,11 +54,6 @@ export default {
     '@nuxtjs/pwa',
   ],
   /*
-   ** Axios module configuration
-   ** See https://axios.nuxtjs.org/options
-   */
-  axios: {},
-  /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module
    */
@@ -83,11 +74,6 @@ export default {
       },
     },
   },
-  /*
-   ** Build configuration
-   ** See https://nuxtjs.org/api/configuration-build/
-   */
-  build: {},
 
   watchers: {
     webpack: {
@@ -97,7 +83,4 @@ export default {
   env: envSet,
 
   css: [{ src: '~assets/css/styles.scss' }],
-  pwa: {
-    icon: true,
-  },
 }
