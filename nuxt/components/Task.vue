@@ -33,6 +33,9 @@ export default {
   methods: {
     success: function () {
       this.living = false
+      setTimeout(() => {
+        this.living = true
+      }, 1000)
       let index = this.$store.state.tasks.tasks.findIndex(
         (element) => element.id === this.task.id
       )
