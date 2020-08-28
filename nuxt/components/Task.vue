@@ -1,5 +1,5 @@
 <template>
-  <v-card :outlined="true">
+  <v-card v-if="living" :outlined="true">
     <v-card-title class="justify-center">
       {{ task.title }}
     </v-card-title>
@@ -26,12 +26,18 @@ export default {
   props: ['task'],
 
   data: () => ({
+    living: true,
     space: ' ',
   }),
 
   methods: {
     success: function () {
-      this.$store.dispatch('tasks/successTask', this.task.id)
+      this.living = false
+      let index = this.$store.state.tasks.tasks.findIndex(
+        (element) => element.id === this.task.id
+      )
+      this.$store.dispatch('tasks/successTask', index)
+      this.$store.commit('tasks/setTaskIDbyDeleteAnimation', index)
       this.$store.dispatch('game/recoveryHP')
       this.$store.dispatch('game/writeSuccessLog', this.task.title)
     },

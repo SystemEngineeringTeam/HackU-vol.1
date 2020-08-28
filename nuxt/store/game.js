@@ -125,10 +125,8 @@ export const actions = {
       if (attackRnd <= 0.3) {
         let logIndex = Math.random() * state.logVariation.length
         logIndex = Math.floor(logIndex)
-        let damage = getters.calcDamage(
-          rootState.tasks.tasks[i].weight,
-          logCount[i]
-        )
+        let damage =
+          getters.calcDamage(rootState.tasks.tasks[i].weight, logCount[i])
         log =
           rootState.tasks.tasks[i].title +
           state.logVariation[logIndex] +

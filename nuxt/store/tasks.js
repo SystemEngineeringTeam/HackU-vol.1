@@ -142,7 +142,7 @@ export const actions = {
       })
   },
 
-  async postTask({ state, rootState, commit, dispatch }) {
+  async postTask({ rootState, commit, dispatch }) {
     let post_json = JSON.parse(JSON.stringify(rootState.tasks.post))
     if (post_json.deadlineDate && post_json.deadlineTime) {
       post_json.deadlineTime = post_json.deadlineTime + ':00'
@@ -184,22 +184,22 @@ export const actions = {
     context.commit('setPostWeight', '')
   },
 
-  async successTask({ state, rootState, commit }, taskID) {
+  async successTask({ state, rootState, commit }, index) {
     await axios
       .post(
         process.env.URL_TASKS_SUCCESS,
         {},
-        { params: { taskID: taskID, userToken: rootState.user.token } }
+        {
+          params: {
+            taskID: state.tasks[index].id,
+            userToken: rootState.user.token,
+          },
+        }
       )
       .then((res) => {
         if (res.status === 200) {
-          let index = state.tasks.findIndex((element) => element.id === taskID)
-          commit('setTaskIDbyDeleteAnimation', index)
-          // アニメを表示させる時間を稼ぐため1秒待たせる
-          setTimeout(() => {
-            commit('removeTask', index)
-            commit('game/removeTask', index, { root: true })
-          }, 1000)
+          commit('removeTask', index)
+          commit('game/removeTask', index, { root: true })
         }
       })
   },

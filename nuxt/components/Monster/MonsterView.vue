@@ -15,6 +15,7 @@ export default {
   name: 'MonsterView',
 
   data: () => ({
+    tasksLen: 0,
     slicedTasks: [],
   }),
 
@@ -27,11 +28,13 @@ export default {
       }
 
       if (this.tasks.length <= monsterNum) {
-        this.slicedTasks = this.tasks
+        this.slicedTasks = JSON.parse(JSON.stringify(this.tasks))
       } else {
-        this.slicedTasks = this.tasks.slice(0, monsterNum)
+        this.slicedTasks = JSON.parse(
+          JSON.stringify(this.tasks.slice(0, monsterNum))
+        )
       }
-    }
+    },
   },
 
   computed: {
@@ -44,7 +47,16 @@ export default {
 
   watch: {
     tasks: function () {
-      this.setSlicedTasks()
+      if (this.tasks.length < this.tasksLen) {
+        // アニメを表示させる時間を稼ぐため1秒待たせる
+
+        setTimeout(() => {
+          this.setSlicedTasks()
+        }, 1000)
+      } else {
+        this.setSlicedTasks()
+      }
+      this.tasksLen = this.tasks.length
     },
   },
 

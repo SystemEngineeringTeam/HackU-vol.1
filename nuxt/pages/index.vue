@@ -1,7 +1,7 @@
 <template>
   <v-row class="text-center">
     <v-col cols="12">
-      <MonsterView/>
+      <MonsterView />
     </v-col>
     <v-col cols="12">
       <Logbox />
@@ -43,7 +43,7 @@ export default {
   },
 
   created() {
-    if(this.$store.state.user.token === ''){
+    if (this.$store.state.user.token === '') {
       this.$router.push('/login')
       return
     }
