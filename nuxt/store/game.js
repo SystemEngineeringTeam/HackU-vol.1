@@ -197,4 +197,8 @@ export const getters = {
       return false
     }
   },
+
+  dieFlag: (state) => {
+    return state.dieFlag
+  },
 }
