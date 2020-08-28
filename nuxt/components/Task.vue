@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="living" :outlined="true">
+  <v-card :outlined="true">
     <v-card-title class="justify-center">
       {{ task.title }}
     </v-card-title>
@@ -26,13 +26,11 @@ export default {
   props: ['task'],
 
   data: () => ({
-    living: true,
     space: ' ',
   }),
 
   methods: {
     success: function () {
-      this.living = false
       let index = this.$store.state.tasks.tasks.findIndex(
         (element) => element.id === this.task.id
       )
