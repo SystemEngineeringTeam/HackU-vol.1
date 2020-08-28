@@ -118,17 +118,15 @@ export const actions = {
       let taskDealineOneWeekAgo = getters.judgmentTaskDealineOneWeekAgo(
         rootState.tasks.tasks[i]
       )
-      if(!taskDealineOneWeekAgo){
+      if (!taskDealineOneWeekAgo) {
         continue
       }
       let attackRnd = Math.random()
       if (attackRnd <= 0.3) {
         let logIndex = Math.random() * state.logVariation.length
         logIndex = Math.floor(logIndex)
-        let damage = getters.calcDamage(
-          rootState.tasks.tasks[i].weight,
-          logCount[i]
-        )
+        let damage =
+          getters.calcDamage(rootState.tasks.tasks[i].weight, logCount[i])
         log =
           rootState.tasks.tasks[i].title +
           state.logVariation[logIndex] +
