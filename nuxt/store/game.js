@@ -114,14 +114,23 @@ export const actions = {
       dispatch('logCountInit')
     }
     let logCount = state.logCount
-    rootState.tasks.tasks.forEach((element, index) => {
+    for (let i = 0; i < rootState.tasks.tasks.length; i++) {
+      let taskDealineOneWeekAgo = getters.judgmentTaskDealineOneWeekAgo(
+        rootState.tasks.tasks[i]
+      )
+      if (!taskDealineOneWeekAgo) {
+        continue
+      }
       let attackRnd = Math.random()
       if (attackRnd <= 0.3) {
         let logIndex = Math.random() * state.logVariation.length
         logIndex = Math.floor(logIndex)
-        let damage = getters.calcDamage(element.weight, logCount[index])
+        let damage = getters.calcDamage(
+          rootState.tasks.tasks[i].weight,
+          logCount[i]
+        )
         log =
-          element.title +
+          rootState.tasks.tasks[i].title +
           state.logVariation[logIndex] +
           rootState.user.name +
           'は' +
@@ -129,11 +138,11 @@ export const actions = {
           'のダメージを受けた！\n' +
           log
         dispatch('lowerHP', damage)
-        logCount[index] = 1
+        logCount[i] = 1
       } else {
-        logCount[index] += 1
+        logCount[i] += 1
       }
-    })
+    }
     commit('setLogCount', logCount)
     if (state.dieFlag) {
       log = rootState.user.name + 'は死んでしまった！\n' + log
@@ -143,6 +152,11 @@ export const actions = {
 
   writeSuccessLog({ state, commit }, title) {
     let log = title + 'を倒した！\n' + state.log
+    commit('setLog', log)
+  },
+
+  writeEnterLog({ state, commit }, title) {
+    let log = title + 'が現れた！\n' + state.log
     commit('setLog', log)
   },
 
@@ -160,9 +174,33 @@ export const getters = {
   calcDamage: (_state, _getters, rootState) => (weight, count) => {
     let weights = rootState.tasks.weights
     let weightIndex = weights.findIndex((element) => element === weight) + 1
-    if (weightIndex === -1) {
+    if (weightIndex === 0) {
       weightIndex = 1
     }
     return weightIndex * count
+  },
+
+  judgmentTaskDealineOneWeekAgo: () => (task) => {
+    if (task.deadlineDate === '') {
+      return true
+    }
+    let taskDate = new Date(
+      parseInt(task.deadlineDate.substr(0, 4), 10),
+      parseInt(task.deadlineDate.substr(5, 2), 10) - 1,
+      parseInt(task.deadlineDate.substr(8, 2), 10),
+      parseInt(task.deadlineTime.substr(0, 2), 10),
+      parseInt(task.deadlineTime.substr(3, 2), 10),
+      0
+    )
+    let diff = taskDate.getTime() - Date.now()
+    if (diff / (1000 * 60 * 60) < 168) {
+      return true
+    } else {
+      return false
+    }
+  },
+
+  dieFlag: (state) => {
+    return state.dieFlag
   },
 }

@@ -1,7 +1,8 @@
 <template>
   <v-app dark>
-    <v-app-bar fixed app>
-      <v-toolbar-title v-text="title" @click="$router.push('/')"/>
+    <v-app-bar fixed app >
+      <!-- <v-toolbar-title v-text="title" @click="$router.push('/')"/> -->
+      <img src="@/static/logo.png" height="110px" style="position: relative; right: 30px; bottom: 5px" />
       <v-spacer />
       <template v-if="$store.state.user.name">
         <v-toolbar-title class="mr-2" v-text="$store.state.user.name" />
@@ -38,7 +39,21 @@ export default {
       this.$store.dispatch('user/logout')
       this.$store.dispatch('tasks/logout')
       this.$store.dispatch('game/logout')
+      this.$router.push('/login')
     },
   },
 }
 </script>
+
+<style lang="scss">
+.v-application {
+  font-family: 'PixelMplus';
+}
+
+html,body {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
+}
+</style>

@@ -12,6 +12,7 @@
       </div>
     </v-col>
     <postDialog />
+    <DieDialog />
   </v-row>
 </template>
 
@@ -20,13 +21,15 @@ import Task from '../components/Task'
 import postDialog from '../components/postDialog'
 import Logbox from '../components/Logbox'
 import MonsterView from '../components/Monster/MonsterView'
+import DieDialog from '../components/DieDialog'
 
 export default {
   components: {
     Task,
     postDialog,
     Logbox,
-    MonsterView
+    MonsterView,
+    DieDialog
   },
 
   data: () => ({
@@ -40,6 +43,10 @@ export default {
   },
 
   created() {
+    if(this.$store.state.user.token === ''){
+      this.$router.push('/login')
+      return
+    }
     this.$store.dispatch('tasks/setTasks')
     this.$store.dispatch('game/gameInit')
     this.intervalID = setInterval(this.secondFunc, 1000)
@@ -50,9 +57,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.v-application {
-  font-family: 'PixelMplus';
-}
-</style>

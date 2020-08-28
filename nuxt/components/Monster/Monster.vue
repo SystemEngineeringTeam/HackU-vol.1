@@ -1,10 +1,26 @@
 <template>
   <v-col>
     <p>{{ task.title }}</p>
-    <v-img v-if="!task.weight" :src="mimic" class="monster" />
-    <v-img v-else-if="task.weight === 'ぬるい'" :src="slime" class="monster" />
-    <v-img v-else-if="task.weight === 'ふつう'" :src="golem" class="monster" />
-    <v-img v-else-if="task.weight === 'えぐい'" :src="dragon" class="monster" />
+    <v-img
+      v-if="!task.weight"
+      :src="mimic"
+      :class="{ monster: !killing, kill_monster: killing }"
+    />
+    <v-img
+      v-else-if="task.weight === 'ぬるい'"
+      :src="slime"
+      :class="{ monster: !killing, kill_monster: killing }"
+    />
+    <v-img
+      v-else-if="task.weight === 'ふつう'"
+      :src="golem"
+      :class="{ monster: !killing, kill_monster: killing }"
+    />
+    <v-img
+      v-else-if="task.weight === 'えぐい'"
+      :src="dragon"
+      :class="{ monster: !killing, kill_monster: killing }"
+    />
   </v-col>
 </template>
 
@@ -21,8 +37,21 @@
   }
 }
 
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
 .monster {
   animation: fuwafuwa 1s linear infinite alternate;
+}
+.kill_monster {
+  animation: flash 0.15s linear infinite alternate;
 }
 </style>
 
@@ -32,7 +61,28 @@ export default {
 
   props: ['task'],
 
+  computed: {
+    store_tasks: function () {
+      return this.$store.getters['tasks/tasks']
+    },
+  },
+
+  watch: {
+    store_tasks: {
+      handler: function () {
+        if (this.task.id === -1) {
+          this.killing = true
+          setTimeout(() => {
+            this.killing = false
+          }, 1000)
+        }
+      },
+      deep: true,
+    },
+  },
+
   data: () => ({
+    killing: false,
     mimic:
       'https://1.bp.blogspot.com/-_8wJqUxj-d4/W4PJlko8nmI/AAAAAAABOIc/Z-MzXgFr2OkbWRKja484G8tVn74a80h5QCLcBGAs/s800/character_game_mimic.png',
     slime:
@@ -44,7 +94,5 @@ export default {
   }),
 
   methods: {},
-
-  computed: {},
 }
 </script>

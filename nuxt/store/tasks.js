@@ -77,6 +77,12 @@ export const state = () => ({
 })
 
 export const mutations = {
+  setTaskIDbyDeleteAnimation(state, index) {
+    let task = state.tasks[index]
+    task.id = -1
+    state.tasks.splice(index, 1, task)
+  },
+
   setTasks(state, tasks) {
     state.tasks = tasks
   },
@@ -116,6 +122,12 @@ export const mutations = {
 
   setWeights(state, weights) {
     state.weights = weights
+  },
+}
+
+export const getters = {
+  tasks: (state) => {
+    return state.tasks
   },
 }
 
@@ -182,8 +194,12 @@ export const actions = {
       .then((res) => {
         if (res.status === 200) {
           let index = state.tasks.findIndex((element) => element.id === taskID)
-          commit('removeTask', index)
-          commit('game/removeTask', index, { root: true })
+          commit('setTaskIDbyDeleteAnimation', index)
+          // アニメを表示させる時間を稼ぐため1秒待たせる
+          setTimeout(() => {
+            commit('removeTask', index)
+            commit('game/removeTask', index, { root: true })
+          }, 1000)
         }
       })
   },
