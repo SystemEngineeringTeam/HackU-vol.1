@@ -57,3 +57,16 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.v-application {
+  font-family: 'PixelMplus';
+}
+
+html,body {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
+}
+</style>
