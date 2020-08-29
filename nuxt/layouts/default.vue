@@ -2,7 +2,7 @@
   <v-app dark>
     <v-app-bar fixed app >
       <!-- <v-toolbar-title v-text="title" @click="$router.push('/')"/> -->
-      <img src="@/static/logo.png" height="110px" style="position: relative; right: 30px; bottom: 5px" />
+      <img @click="$router.push('story')" src="@/static/logo.png" height="110px" style="position: relative; right: 30px; bottom: 5px" />
       <v-spacer />
       <template v-if="$store.state.user.name">
         <v-toolbar-title class="mr-2" v-text="$store.state.user.name" />
