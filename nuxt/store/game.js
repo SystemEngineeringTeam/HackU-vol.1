@@ -97,7 +97,7 @@ export const actions = {
   },
 
   recoveryHP({ state, rootState, commit }) {
-    if (rootState.tasks.tasks.length === 1) {
+    if (rootState.tasks.tasks.length === 0) {
       commit('setHP', state.maxHP)
     } else {
       commit('setHP', Math.min(state.HP + 200000, state.maxHP))
